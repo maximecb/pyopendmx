@@ -1,6 +1,7 @@
 import time
 import math
 from pyftdi.ftdi import Ftdi
+import numpy as np
 
 class DMXUniverse:
     def __init__(self, url='ftdi://ftdi:232:AL6E8JFW/1'):
@@ -67,14 +68,3 @@ class RGBW12(DMXDevice):
         dmx[self.chan_no + 6] = self.b
         dmx[self.chan_no + 7] = self.w
 
-# TODO: should we have rgbw state, strobe in a base DMXFixture class?
-# Most fixtures are going to support this?
-# Except some are RGB, some RGBW?
-# Refactoring can wait
-
-dmx = DMXUniverse()
-fix = RGBW12(chan_no=1)
-
-fix.r = 255
-
-fix.update(dmx)
