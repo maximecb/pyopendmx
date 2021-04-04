@@ -14,24 +14,61 @@ from audio import *
 dmx = DMXUniverse()
 fix = RGBW12(chan_no=1)
 
+
+
+
+
 fix.r = 255
-
-fix.update(dmx)
-dmx.update()
-
-
+fix.g = 255
+fix.b = 255
+fix.w = 255
 
 
 
-"""
-itr = 0
+def process_sound(indata, frames, time, status):
+    print(indata.shape)
+
+    norm = np.linalg.norm(indata)*10
+    norm = min(norm, 100)
+
+    print(norm)
+    print("|" * int(norm))
+
+
+    if norm > 40:
+        val = 255
+    else:
+        val = 0
+
+    fix.r = val
+    fix.g = val
+    fix.b = val
+    fix.w = val
+
+    fix.update(dmx)
+    dmx.update()
+    
+
+
+stream = sd.InputStream(samplerate=11025, blocksize=400, channels=1, dtype=np.float32, latency='low')
+stream.start()
 
 while True:
-    print('send')
 
-    cyclepos = (itr % 50) / 50.0
-    val = (math.sin(2 * math.pi * cyclepos) + 1) / 2
+    num_avail = stream.read_available
+    print(num_avail)
+    data, overflowed = stream.read(max(num_avail, 400))
+    num_read = data.shape[0]
 
-    # Strobe line
-    data[1] = int(val * 255)
-"""
+    start_idx = num_read - 400
+    print(start_idx)
+
+    data = data[start_idx:, :]
+
+    print(data.shape)
+
+    process_sound(data, 0, 0, 0)
+
+
+stream.end()
+

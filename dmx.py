@@ -26,7 +26,6 @@ class DMXUniverse:
         assert isinstance(val, int)
         assert (val >= 0 and val <= 255)
         self.data[idx] = val
-        print(idx, val)
 
     def update(self):
         """
@@ -66,12 +65,13 @@ class RGBW12(DMXDevice):
         self.g = 0
         self.b = 0
         self.w = 0
+        self.strobe = 0
 
     def update(self, dmx):
-        dmx[self.chan_no + 0] = 255     # Dimming
-        dmx[self.chan_no + 1] = 0       # Strobe
-        dmx[self.chan_no + 2] = 0       # DMX control
-        dmx[self.chan_no + 3] = 0       # Speed
+        dmx[self.chan_no + 0] = 255
+        dmx[self.chan_no + 1] = int(round(self.strobe * 191))
+        dmx[self.chan_no + 2] = 0
+        dmx[self.chan_no + 3] = 0
         dmx[self.chan_no + 4] = self.r
         dmx[self.chan_no + 5] = self.g
         dmx[self.chan_no + 6] = self.b
