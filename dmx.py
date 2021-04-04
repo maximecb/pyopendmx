@@ -49,6 +49,14 @@ class DMXDevice:
 class RGBW12(DMXDevice):
     """
     Small RGBW fixture with 12 LEDs, 8 channels
+    CH1: total dimming
+    CH2: Strobe (0-2 off, 3-191 slow to fast)
+    CH3: Function select (0-50 DMX)
+    CH4: Function speed
+    CH5: R 0-255
+    CH6: G 0-255
+    CH7: B 0-255
+    CH8: W 0-255
     """
 
     def __init__(self, chan_no):
