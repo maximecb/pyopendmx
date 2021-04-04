@@ -17,7 +17,7 @@ class DMXUniverse:
         # 513 bytes are sent in total
         self.data = bytearray(513 * [0])
 
-    def __del__():
+    def __del__(self):
         self.port.close()
 
     def __setitem__(self, idx, val):
@@ -26,15 +26,16 @@ class DMXUniverse:
         assert isinstance(val, int)
         assert (val >= 0 and val <= 255)
         self.data[idx] = val
+        print(idx, val)
 
-    def update():
+    def update(self):
         """
         Write channel data to the output port
         """
 
-        port.set_break(True)
-        port.set_break(False)
-        port.write_data(selfdata)
+        self.port.set_break(True)
+        self.port.set_break(False)
+        self.port.write_data(self.data)
 
         time.sleep(20/1000.0)
 

@@ -1,6 +1,7 @@
 import time
 import math
 from dmx import *
+from audio import *
 
 # IDEA: should we have rgbw state, strobe in a base DMXFixture class?
 # Most fixtures are going to support this?
@@ -16,7 +17,7 @@ fix = RGBW12(chan_no=1)
 fix.r = 255
 
 fix.update(dmx)
-
+dmx.update()
 
 
 
