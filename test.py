@@ -1,7 +1,20 @@
 import time
 import math
+import random
+import threading
 from dmx import *
 from audio import *
+import aubio
+
+
+
+
+
+
+def random_color():
+    pass
+
+
 
 # IDEA: should we have rgbw state, strobe in a base DMXFixture class?
 # Most fixtures are going to support this?
@@ -14,61 +27,94 @@ from audio import *
 dmx = DMXUniverse()
 fix = RGBW12(chan_no=1)
 
-
-
-
-
 fix.r = 255
 fix.g = 255
 fix.b = 255
 fix.w = 255
 
 
-
-def process_sound(indata, frames, time, status):
-    print(indata.shape)
-
-    norm = np.linalg.norm(indata)*10
-    norm = min(norm, 100)
-
-    print(norm)
-    print("|" * int(norm))
+# TODO: can we use librosa for FFT/mfccs in real-time?
 
 
-    if norm > 40:
+
+
+
+
+
+
+
+
+
+def dmx_thread_fn():
+    # TODO: create DMX universe here?
+
+    while True:
+        print('dmx update', fix.r)
+        fix.update(dmx)
+        dmx.update()
+
+
+
+dmx_thread = threading.Thread(target=dmx_thread_fn, args=(), daemon=True)
+dmx_thread.start()
+
+
+
+
+
+samplerate = 11025
+win_s = 512                 # fft size
+hop_s = win_s // 2          # hop size
+
+a_tempo = aubio.tempo("default", win_s, hop_s, samplerate)
+a_onset = aubio.onset("default", win_s, hop_s, samplerate)
+
+stream = sd.InputStream(samplerate=samplerate, blocksize=400, channels=1, dtype=np.float32, latency='low')
+stream.start()
+
+while True:
+    beat_detected = False
+
+    samples, overflowed = stream.read(hop_s)
+    samples = samples.squeeze()
+
+
+    # TODO: keep track of average intensity, stop when near silent
+    #norm = np.linalg.norm(indata)*10
+
+    # TODO: can we somehow smooth the tempo over time
+    # Ideally, we would like a very regular beat
+    # Could account for the average space between the last several beats somehow?
+
+    # TODO: need a concept of beat events?
+    # Send these events to an animation thread
+    # Then, the DMX update thread does its thing separately
+
+
+
+    beat = a_tempo(samples)
+
+    if beat:
+        print('|' * 40)
+    else:
+        print()
+
+    if beat:
         val = 255
     else:
-        val = 0
+        val = int(fix.r * 0.7)
 
+    #fix.strobe = val / 255
     fix.r = val
     fix.g = val
     fix.b = val
     fix.w = val
 
-    fix.update(dmx)
-    dmx.update()
-    
+    print('fix.r', fix.r)
 
 
-stream = sd.InputStream(samplerate=11025, blocksize=400, channels=1, dtype=np.float32, latency='low')
-stream.start()
 
-while True:
 
-    num_avail = stream.read_available
-    print(num_avail)
-    data, overflowed = stream.read(max(num_avail, 400))
-    num_read = data.shape[0]
-
-    start_idx = num_read - 400
-    print(start_idx)
-
-    data = data[start_idx:, :]
-
-    print(data.shape)
-
-    process_sound(data, 0, 0, 0)
 
 
 stream.end()
-
