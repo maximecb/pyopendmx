@@ -1,0 +1,35 @@
+# IDEA: should we have rgbw state, strobe in a base DMXFixture class?
+# Most fixtures are going to support this?
+# Except some are RGB, some RGBW?
+# Maybe wait to refactor until we play with the current setup a bit
+# May want to use numpy to interpolate between configs
+
+IDEA: we can have preprogrammed coordinates for the moving heads
+- Have them flash or change color to the beat, change target position to the beat
+- Sometimes can mirror the yaw rotation, but keep the pitch the same
+
+TODO: establish good/safe positions for moving heads
+- start with specifically the positions we don't want
+
+TODO: function to map [0, 1] value into range, map_to()
+
+TODO: bpm estimation, may be a useful quantity
+TODO: loudness estimation
+- we also need to keep some kind of max, or simply a slower running average
+- loudness_fast_avg, loudness_slow_avg
+
+TODO: need an animation thread
+- thread needs to be able to receive beat events
+
+
+# TODO: keep track of average intensity, stop when near silent
+#norm = np.linalg.norm(indata)*10
+
+# TODO: can we somehow smooth the tempo over time
+# Ideally, we would like a very regular beat
+# Could account for the average space between the last several beats somehow?
+# We probably just want to use aubio to estimate the tempo!
+# It doesn't super matter if we're not exactly on the beat, it matters more that we're consistently spaced
+
+TODO: DMXUniverse.start_dmx_thread()
+TODO: DMXUniverse.add_fixture()

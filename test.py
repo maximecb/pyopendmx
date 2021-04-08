@@ -12,17 +12,23 @@ import aubio
 
 
 def random_color():
-    pass
+    while True:
+        color = (
+            random.choice([255, 0]),
+            random.choice([255, 0]),
+            random.choice([255, 0]),
+            random.choice([255, 0]),
+        )
+
+        if color != (0, 0, 0, 0):
+            break
+
+    return color
 
 
 
-# IDEA: should we have rgbw state, strobe in a base DMXFixture class?
-# Most fixtures are going to support this?
-# Except some are RGB, some RGBW?
-# Maybe wait to refactor until we play with the current setup a bit
-# May want to use numpy to interpolate between configs
 
-# TODO: function to map [0, 1] value into range, map_to()
+
 
 dmx = DMXUniverse()
 fix = RGBW12(chan_no=1)
@@ -31,9 +37,6 @@ fix.r = 255
 fix.g = 255
 fix.b = 255
 fix.w = 255
-
-
-# TODO: can we use librosa for FFT/mfccs in real-time?
 
 
 
@@ -47,6 +50,9 @@ fix.w = 255
 
 def dmx_thread_fn():
     # TODO: create DMX universe here?
+    # We can keep a list of fixtures globally
+    # Otherwise, create a start_dmx_thread method in the DMX universe
+    # dmx.add_fixture()
 
     while True:
         print('dmx update', fix.r)
@@ -62,8 +68,8 @@ dmx_thread.start()
 
 
 
-samplerate = 11025
-win_s = 512                 # fft size
+samplerate = 44100
+win_s = 1024                # fft size
 hop_s = win_s // 2          # hop size
 
 a_tempo = aubio.tempo("default", win_s, hop_s, samplerate)
@@ -79,20 +85,11 @@ while True:
     samples = samples.squeeze()
 
 
-    # TODO: keep track of average intensity, stop when near silent
-    #norm = np.linalg.norm(indata)*10
-
-    # TODO: can we somehow smooth the tempo over time
-    # Ideally, we would like a very regular beat
-    # Could account for the average space between the last several beats somehow?
-
-    # TODO: need a concept of beat events?
-    # Send these events to an animation thread
-    # Then, the DMX update thread does its thing separately
 
 
 
     beat = a_tempo(samples)
+    # Can call o.get_last_s() to get the sample where the beat occurred
 
     if beat:
         print('|' * 40)
@@ -100,15 +97,16 @@ while True:
         print()
 
     if beat:
-        val = 255
+        r, g, b, w = random_color()
+        fix.r = r
+        fix.g = g
+        fix.b = b
+        fix.w = w
     else:
-        val = int(fix.r * 0.7)
-
-    #fix.strobe = val / 255
-    fix.r = val
-    fix.g = val
-    fix.b = val
-    fix.w = val
+        fix.r = int(fix.r * 0.8)
+        fix.g = int(fix.g * 0.8)
+        fix.b = int(fix.b * 0.8)
+        fix.w = int(fix.w * 0.8)
 
     print('fix.r', fix.r)
 
