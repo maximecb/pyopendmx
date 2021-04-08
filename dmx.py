@@ -1,5 +1,6 @@
 import time
 import math
+import threading
 from pyftdi.ftdi import Ftdi
 import numpy as np
 
@@ -17,6 +18,8 @@ class DMXUniverse:
         # 513 bytes are sent in total
         self.data = bytearray(513 * [0])
 
+        self.devices = []
+
     def __del__(self):
         self.port.close()
 
@@ -27,16 +30,33 @@ class DMXUniverse:
         assert (val >= 0 and val <= 255)
         self.data[idx] = val
 
-    def update(self):
+    def add_device(self, device):
+        self.devices.append(device)
+
+    def start_dmx_thread(self):
         """
-        Write channel data to the output port
+        Thread to write channel data to the output port
         """
 
-        self.port.set_break(True)
-        self.port.set_break(False)
-        self.port.write_data(self.data)
+        def dmx_thread_fn():
+            while True:
+                for dev in self.devices:
+                    dev.update(self)
 
-        time.sleep(20/1000.0)
+                self.port.set_break(True)
+                self.port.set_break(False)
+                self.port.write_data(self.data)
+
+                # The maximum update rate for the Enttec OpenDMX is 40Hz
+                time.sleep(8/1000.0)
+
+        dmx_thread = threading.Thread(target=dmx_thread_fn, args=(), daemon=True)
+        dmx_thread.start()
+
+
+
+
+
 
 class DMXDevice:
     def __init__(self, chan_no, num_chans):

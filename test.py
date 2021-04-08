@@ -31,38 +31,12 @@ def random_color():
 
 
 dmx = DMXUniverse()
+
 fix = RGBW12(chan_no=1)
+dmx.add_device(fix)
 
-fix.r = 255
-fix.g = 255
-fix.b = 255
-fix.w = 255
+dmx.start_dmx_thread()
 
-
-
-
-
-
-
-
-
-
-
-def dmx_thread_fn():
-    # TODO: create DMX universe here?
-    # We can keep a list of fixtures globally
-    # Otherwise, create a start_dmx_thread method in the DMX universe
-    # dmx.add_fixture()
-
-    while True:
-        print('dmx update', fix.r)
-        fix.update(dmx)
-        dmx.update()
-
-
-
-dmx_thread = threading.Thread(target=dmx_thread_fn, args=(), daemon=True)
-dmx_thread.start()
 
 
 
@@ -108,10 +82,7 @@ while True:
         fix.b = int(fix.b * 0.8)
         fix.w = int(fix.w * 0.8)
 
-    print('fix.r', fix.r)
-
-
-
+    #print('fix.r', fix.r)
 
 
 
