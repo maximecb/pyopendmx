@@ -14,10 +14,10 @@ import aubio
 def random_color():
     while True:
         color = (
-            random.choice([255, 0]),
-            random.choice([255, 0]),
-            random.choice([255, 0]),
-            random.choice([255, 0]),
+            random.choice([1, 0]),
+            random.choice([1, 0]),
+            random.choice([1, 0]),
+            random.choice([1, 0]),
         )
 
         if color != (0, 0, 0, 0):
@@ -32,8 +32,11 @@ def random_color():
 
 dmx = DMXUniverse()
 
-fix = RGBW12(chan_no=1)
-dmx.add_device(fix)
+#fix = RGBW12(chan_no=1)
+#dmx.add_device(fix)
+
+head = MovingHead(chan_no=1)
+dmx.add_device(head)
 
 dmx.start_dmx_thread()
 
@@ -72,17 +75,23 @@ while True:
 
     if beat:
         r, g, b, w = random_color()
-        fix.r = r
-        fix.g = g
-        fix.b = b
-        fix.w = w
-    else:
-        fix.r = int(fix.r * 0.8)
-        fix.g = int(fix.g * 0.8)
-        fix.b = int(fix.b * 0.8)
-        fix.w = int(fix.w * 0.8)
+        head.r = r
+        head.g = g
+        head.b = b
+        head.w = w
 
-    #print('fix.r', fix.r)
+        # TODO: only change position ever 2 or 4 beats
+        head.speed = 0.25
+        head.dimming = 0.25
+        head.pan = random.uniform(0, 1)
+        head.tilt = random.uniform(0.4, 0.6)
+
+    else:
+        head.r = head.r * 0.8
+        head.g = head.g * 0.8
+        head.b = head.b * 0.8
+        head.w = head.w * 0.8
+        pass
 
 
 

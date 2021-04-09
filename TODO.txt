@@ -14,29 +14,42 @@ IDEA: we can have preprogrammed coordinates for the moving heads
 - Have them flash or change color to the beat, change target position to the beat
 - Sometimes can mirror the yaw rotation, but keep the pitch the same
 
+IDEA: mode with only red, orange and white
+IDEA: if we have 4x/5x, can make patterns, move left and right, etc.
+
 TODO: establish good/safe positions for moving heads
 - start with specifically the positions we don't want
 
 TODO: bpm estimation, may be a useful quantity
+
+TODO: would like to store color as tuple on fixtures
+- then we can directly store the rgbw value
+- also good for numpy interpolation
+
 TODO: loudness estimation
 norm = np.linalg.norm(indata)*10
 - we also need to keep some kind of max, or simply a slower running average
 - loudness_fast_avg, loudness_slow_avg
 
-TODO: would like to store color as tuple on fixtures
-- then we can directly store the rgbw value
+TODO: count beat numbers so we can trigger ever 2 or 4 beats
 
 TODO: need an animation thread
 - thread needs to be able to receive beat events
 - can start by prototyping this in test.py
 
-TODO: convert colors to FP values in [0, 1]
-TODO: function to map [0, 1] value into range, map_to()
+
+
+
+[DONE] TODO: create a shortcut method for setting dmx val
+dmx[self.chan_no + 0] = map_float_to(self.pan, 0, 255)
+- dmx.set_float(start_chan, chan_no, val, min=0, max=255)
+
+[DONE] TODO: create a class for the Docooler RGBW moving head
+
+[DONE] TODO: convert colors to FP values in [0, 1]
+
+[DONE] TODO: function to map [0, 1] value into range, map_to()
 - have fixtures use FP values for everything
-
-
-
-
 
 [DONE] TODO: max DMX update rate is 40Hz
 - add in comment, aim for 35Hz

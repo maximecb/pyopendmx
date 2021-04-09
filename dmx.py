@@ -4,6 +4,10 @@ import threading
 from pyftdi.ftdi import Ftdi
 import numpy as np
 
+def map_to(val, min, max):
+    assert max > min
+    return round(min + val * (max - min))
+
 class DMXUniverse:
     def __init__(self, url='ftdi://ftdi:232:AL6E8JFW/1'):
         self.url = url
@@ -24,11 +28,16 @@ class DMXUniverse:
         self.port.close()
 
     def __setitem__(self, idx, val):
-        assert (idx > 0)
+        assert (idx >= 1)
         assert (idx <= 512)
         assert isinstance(val, int)
         assert (val >= 0 and val <= 255)
         self.data[idx] = val
+
+    def set_float(self, start_chan, chan_no, val, min=0, max=255):
+        assert (chan_no >= 1)
+        int_val = map_to(val, min, max)
+        self[start_chan + chan_no - 1] = int_val
 
     def add_device(self, device):
         self.devices.append(device)
@@ -53,11 +62,6 @@ class DMXUniverse:
         dmx_thread = threading.Thread(target=dmx_thread_fn, args=(), daemon=True)
         dmx_thread.start()
 
-
-
-
-
-
 class DMXDevice:
     def __init__(self, chan_no, num_chans):
         self.chan_no = chan_no
@@ -70,9 +74,9 @@ class RGBW12(DMXDevice):
     """
     Small RGBW fixture with 12 LEDs, 8 channels
     CH1: total dimming
-    CH2: Strobe (0-2 off, 3-191 slow to fast)
-    CH3: Function select (0-50 DMX)
-    CH4: Function speed
+    CH2: strobe (0-2 off, 3-191 slow to fast)
+    CH3: function select (0-50 DMX)
+    CH4: function speed
     CH5: R 0-255
     CH6: G 0-255
     CH7: B 0-255
@@ -81,6 +85,7 @@ class RGBW12(DMXDevice):
 
     def __init__(self, chan_no):
         super().__init__(chan_no, num_chans=8)
+        self.dimming = 1
         self.r = 0
         self.g = 0
         self.b = 0
@@ -88,12 +93,50 @@ class RGBW12(DMXDevice):
         self.strobe = 0
 
     def update(self, dmx):
-        dmx[self.chan_no + 0] = 255
-        dmx[self.chan_no + 1] = int(round(self.strobe * 191))
-        dmx[self.chan_no + 2] = 0
-        dmx[self.chan_no + 3] = 0
-        dmx[self.chan_no + 4] = self.r
-        dmx[self.chan_no + 5] = self.g
-        dmx[self.chan_no + 6] = self.b
-        dmx[self.chan_no + 7] = self.w
+        dmx.set_float(self.chan_no, 1, self.dimming)
+        dmx.set_float(self.chan_no, 2, self.strobe, 0, 191)
+        dmx.set_float(self.chan_no, 3, 0)
+        dmx.set_float(self.chan_no, 4, 0)
+        dmx.set_float(self.chan_no, 5, self.r)
+        dmx.set_float(self.chan_no, 6, self.g)
+        dmx.set_float(self.chan_no, 7, self.b)
+        dmx.set_float(self.chan_no, 8, self.w)
+
+class MovingHead(DMXDevice):
+    """
+    Moving head with RGBW and strobe.
+    Modeled after the Docooler mini moving head
+    CH1: motor pan
+    CH2: motor tilt
+    CH3: pan/tilt speed 0-255 (fast to slow)
+    CH4: total dimming
+    CH5: strobe speed
+    CH6: R 0-255
+    CH7: G 0-255
+    CH8: B 0-255
+    CH9: W 0-255
+    """
+
+    def __init__(self, chan_no):
+        super().__init__(chan_no, num_chans=14)
+        self.pan = 0
+        self.tilt = 0
+        self.speed = 0
+        self.dimming = 1
+        self.r = 0
+        self.g = 0
+        self.b = 0
+        self.w = 0
+        self.strobe = 0
+
+    def update(self, dmx):
+        dmx.set_float(self.chan_no, 1, self.pan)
+        dmx.set_float(self.chan_no, 2, self.tilt)
+        dmx.set_float(self.chan_no, 3, 1 - self.speed)
+        dmx.set_float(self.chan_no, 4, self.dimming)
+        dmx.set_float(self.chan_no, 5, self.strobe)
+        dmx.set_float(self.chan_no, 6, self.r)
+        dmx.set_float(self.chan_no, 7, self.g)
+        dmx.set_float(self.chan_no, 8, self.b)
+        dmx.set_float(self.chan_no, 9, self.w)
 
