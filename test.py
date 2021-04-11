@@ -32,11 +32,11 @@ def random_color():
 
 dmx = DMXUniverse()
 
-#fix = RGBW12(chan_no=1)
-#dmx.add_device(fix)
-
+fix = RGBW12(chan_no=1)
 head = MovingHead(chan_no=1)
-dmx.add_device(head)
+
+dmx.add_device(fix)
+#dmx.add_device(head)
 
 dmx.start_dmx_thread()
 
@@ -50,7 +50,6 @@ win_s = 1024                # fft size
 hop_s = win_s // 2          # hop size
 
 a_tempo = aubio.tempo("default", win_s, hop_s, samplerate)
-a_onset = aubio.onset("default", win_s, hop_s, samplerate)
 
 stream = sd.InputStream(samplerate=samplerate, blocksize=400, channels=1, dtype=np.float32, latency='low')
 stream.start()
@@ -60,10 +59,6 @@ while True:
 
     samples, overflowed = stream.read(hop_s)
     samples = samples.squeeze()
-
-
-
-
 
     beat = a_tempo(samples)
     # Can call o.get_last_s() to get the sample where the beat occurred
@@ -75,6 +70,14 @@ while True:
 
     if beat:
         r, g, b, w = random_color()
+
+        fix.dimming = 1
+        fix.r = r
+        fix.g = g
+        fix.b = b
+        fix.w = w
+
+        head.dimming = 1
         head.r = r
         head.g = g
         head.b = b
@@ -87,11 +90,8 @@ while True:
         head.tilt = random.uniform(0.4, 0.6)
 
     else:
-        head.r = head.r * 0.8
-        head.g = head.g * 0.8
-        head.b = head.b * 0.8
-        head.w = head.w * 0.8
-        pass
+        head.dimming = head.dimming * 0.7
+        fix.dimming = fix.dimming * 0.8
 
 
 

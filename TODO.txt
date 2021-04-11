@@ -33,6 +33,8 @@ norm = np.linalg.norm(indata)*10
 
 TODO: count beat numbers so we can trigger ever 2 or 4 beats
 
+flash intensity with loudness?
+
 TODO: need an animation thread
 - thread needs to be able to receive beat events
 - can start by prototyping this in test.py
