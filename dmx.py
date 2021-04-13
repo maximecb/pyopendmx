@@ -70,6 +70,37 @@ class DMXDevice:
     def update(self, dmx):
         raise NotImplementedError
 
+class RGBWSpotLigh(DMXDevice):
+    """
+    Small RGBW spotlight
+    CH1: effect (0 no effect, 135-239 strobe)
+    CH2: R 0-255
+    CH3: G 0-255
+    CH4: B 0-255
+    CH5: W 0-255
+    CH6: modes
+    """
+
+    def __init__(self, chan_no):
+        super().__init__(chan_no, num_chans=6)
+        self.dimming = 1
+        self.r = 0
+        self.g = 0
+        self.b = 0
+        self.w = 0
+        self.strobe = 0
+
+    def update(self, dmx):
+        if self.strobe == 0:
+            dmx.set_float(self.chan_no, 1, 0)
+        else:
+            dmx.set_float(self.chan_no, 1, strobe, 135, 191)
+
+        dmx.set_float(self.chan_no, 2, self.r * self.dimming)
+        dmx.set_float(self.chan_no, 3, self.g * self.dimming)
+        dmx.set_float(self.chan_no, 4, self.b * self.dimming)
+        dmx.set_float(self.chan_no, 5, self.w * self.dimming)
+
 class RGBW12(DMXDevice):
     """
     Small RGBW fixture with 12 LEDs, 8 channels
@@ -140,3 +171,25 @@ class MovingHead(DMXDevice):
         dmx.set_float(self.chan_no, 8, self.b)
         dmx.set_float(self.chan_no, 9, self.w)
 
+class LedStrip4CH(DMXDevice):
+    """
+    4-channel DMX LED strip decoder
+    CH1: CH1/R 0-255
+    CH2: CH2/G 0-255
+    CH3: CH3/B 0-255
+    CH4: CH4/W 0-255
+    """
+
+    def __init__(self, chan_no):
+        super().__init__(chan_no, num_chans=4)
+        self.dimming = 1
+        self.ch1 = 0
+        self.ch1 = 0
+        self.ch3 = 0
+        self.ch4 = 0
+
+    def update(self, dmx):
+        dmx.set_float(self.chan_no, 1, self.ch1 * self.dimming)
+        dmx.set_float(self.chan_no, 2, self.ch2 * self.dimming)
+        dmx.set_float(self.chan_no, 3, self.ch3 * self.dimming)
+        dmx.set_float(self.chan_no, 4, self.ch4 * self.dimming)

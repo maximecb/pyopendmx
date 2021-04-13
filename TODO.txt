@@ -33,7 +33,9 @@ norm = np.linalg.norm(indata)*10
 
 TODO: count beat numbers so we can trigger ever 2 or 4 beats
 
-flash intensity with loudness?
+IDEA: flash intensity with loudness?
+- this would also solve the issue of flashing when the music stops
+- use numpy.std(v)
 
 TODO: need an animation thread
 - thread needs to be able to receive beat events
