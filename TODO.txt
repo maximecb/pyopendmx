@@ -26,23 +26,41 @@ TODO: would like to store color as tuple on fixtures
 - then we can directly store the rgbw value
 - also good for numpy interpolation
 
-TODO: loudness estimation
+TODO: trigger some events every 2 or 4 beats
+
+IDEA: it will be easy to have multiple animation classes
+- you could have one for a more chill mode that's not music-reactive
+
+-----------------------------------------------------------------------------
+
+We have multiple quantities we want to track
+- Loudness, with multiple windows (instant, short, long)
+- Beat number
+- Maybe we can have an animation class with a start_thread method
+- Would the fixtures just be global?
+- Maybe we can init with the dmx thread
+
+TODO: make colors be assignable as numpy arrays, easily assignable
+TODO: random_rgb and random_rgbw
+- return numpy arrays
+
+TODO: flash intensity with loudness ***
+- compute max value over full time horizon
+- this would also solve the issue of flashing when the music stops
+- test when music starting
+
+
+
+
+
+
+
+
+[DONE] TODO: loudness estimation
 norm = np.linalg.norm(indata)*10
 - we also need to keep some kind of max, or simply a slower running average
 - loudness_fast_avg, loudness_slow_avg
-
-TODO: count beat numbers so we can trigger ever 2 or 4 beats
-
-IDEA: flash intensity with loudness?
-- this would also solve the issue of flashing when the music stops
 - use numpy.std(v)
-
-TODO: need an animation thread
-- thread needs to be able to receive beat events
-- can start by prototyping this in test.py
-
-
-
 
 [DONE] TODO: create a shortcut method for setting dmx val
 dmx[self.chan_no + 0] = map_float_to(self.pan, 0, 255)
