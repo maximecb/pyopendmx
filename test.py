@@ -36,7 +36,7 @@ class Animation:
         Update the animation
         """
 
-
+        max_loudness = max(loud_vals)
 
         fix = self.fix
         head = self.head
@@ -48,13 +48,17 @@ class Animation:
             # Need some estimate of max loudness
             # Also need to use np.clip(val, min, max)
 
-            fix.dimming = 1
+            dimming = loudness / max_loudness
+
+            print(loudness, max_loudness, dimming)
+
+            fix.dimming = dimming
             fix.r = r
             fix.g = g
             fix.b = b
             fix.w = w
 
-            head.dimming = 1
+            head.dimming = dimming
             head.r = r
             head.g = g
             head.b = b
@@ -65,9 +69,6 @@ class Animation:
             head.dimming = 0.25
             head.pan = random.uniform(0, 1)
             head.tilt = random.uniform(0.4, 0.6)
-
-            # Keep track of the beat number
-            self.beat_no += 1
 
         else:
             # Decay
@@ -109,10 +110,10 @@ while True:
     # Note: we can call o.get_last_s() to get the sample where the beat occurred
     beat = a_tempo(samples)
 
-    loudness = numpy.std(samples)
+    loudness = np.std(samples)
     loud_vals.append(loudness)
 
-    if (len(loud_vals) > 1000):
+    if (len(loud_vals) > 500):
         loud_vals.pop(0)
 
     anim.update(beat, beat_no, loudness, loud_vals)

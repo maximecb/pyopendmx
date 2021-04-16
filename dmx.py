@@ -6,7 +6,7 @@ import numpy as np
 
 def map_to(val, min, max):
     assert max > min
-    return round(min + val * (max - min))
+    return int(round(min + val * (max - min)))
 
 class DMXUniverse:
     def __init__(self, url='ftdi://ftdi:232:AL6E8JFW/1'):
