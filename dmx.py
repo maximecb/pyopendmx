@@ -37,8 +37,14 @@ class DMXUniverse:
 
     def set_float(self, start_chan, chan_no, val, min=0, max=255):
         assert (chan_no >= 1)
-        int_val = map_to(val, min, max)
-        self[start_chan + chan_no - 1] = int_val
+
+        if hasattr(val, '__len__'):
+            for i in range(len(val)):
+                int_val = map_to(val[i], min, max)
+                self[start_chan + chan_no - 1 + i] = int_val
+        else:
+            int_val = map_to(val, min, max)
+            self[start_chan + chan_no - 1] = int_val
 
     def add_device(self, device):
         self.devices.append(device)
@@ -64,7 +70,8 @@ class DMXUniverse:
         dmx_thread.start()
 
 class DMXDevice:
-    def __init__(self, chan_no, num_chans):
+    def __init__(self, name, chan_no, num_chans):
+        self.name = name
         self.chan_no = chan_no
         self.num_chans = num_chans
 
@@ -82,8 +89,8 @@ class RGBWSpotLigh(DMXDevice):
     CH6: modes
     """
 
-    def __init__(self, chan_no):
-        super().__init__(chan_no, num_chans=6)
+    def __init__(self, name, chan_no):
+        super().__init__(name, chan_no, num_chans=6)
         self.dimming = 1
         self.r = 0
         self.g = 0
@@ -115,8 +122,8 @@ class RGBW12(DMXDevice):
     CH8: W 0-255
     """
 
-    def __init__(self, chan_no):
-        super().__init__(chan_no, num_chans=8)
+    def __init__(self, name, chan_no):
+        super().__init__(name, chan_no, num_chans=8)
         self.dimming = 1
         self.r = 0
         self.g = 0
@@ -149,8 +156,8 @@ class MovingHead(DMXDevice):
     CH9: W 0-255
     """
 
-    def __init__(self, chan_no):
-        super().__init__(chan_no, num_chans=14)
+    def __init__(self, name, chan_no):
+        super().__init__(name, chan_no, num_chans=14)
         self.pan = 0
         self.tilt = 0
         self.speed = 0
@@ -181,8 +188,8 @@ class LedStrip4CH(DMXDevice):
     CH4: CH4/W 0-255
     """
 
-    def __init__(self, chan_no):
-        super().__init__(chan_no, num_chans=4)
+    def __init__(self, name, chan_no):
+        super().__init__(name, chan_no, num_chans=4)
         self.dimming = 1
         self.ch1 = 0
         self.ch2 = 0

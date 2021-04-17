@@ -6,7 +6,7 @@ from dmx import *
 from audio import *
 import aubio
 
-def random_color():
+def random_rgbw():
     while True:
         color = (
             random.choice([1, 0]),
@@ -26,9 +26,9 @@ class Animation:
     """
 
     def __init__(self, dmx):
-        self.fix = RGBW12(chan_no=1)
-        self.strip = LedStrip4CH(chan_no=256)
-        self.head = MovingHead(chan_no=1)
+        self.fix = RGBW12(name="fix", chan_no=1)
+        self.strip = LedStrip4CH(name="strip", chan_no=256)
+        self.head = MovingHead(name="head", chan_no=1)
 
         dmx.add_device(self.fix)
         dmx.add_device(self.strip)
@@ -46,9 +46,7 @@ class Animation:
         head = self.head
 
         if beat:
-            r, g, b, w = random_color()
-
-            #print(loudness, max_loudness, dimming)
+            r, g, b, w = random_rgbw()
 
             fix.dimming = 1
             fix.r = r

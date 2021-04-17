@@ -40,21 +40,23 @@ We have multiple quantities we want to track
 - Would the fixtures just be global?
 - Maybe we can init with the dmx thread
 
+TODO: method in animation to have everything strobe
+
 TODO: make colors be assignable as numpy arrays, easily assignable
+
 TODO: random_rgb and random_rgbw
 - return numpy arrays
 
-TODO: flash intensity with loudness ***
-- compute max value over full time horizon
-- this would also solve the issue of flashing when the music stops
-- test when music starting
 
 
 
 
 
 
+[DONE] TODO: make dmx set support iterables
+hasattr(name, '__len__'):
 
+[DONE] TODO: give fixtures names
 
 [DONE] TODO: loudness estimation
 norm = np.linalg.norm(indata)*10
