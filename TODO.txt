@@ -1,35 +1,19 @@
-# IDEA: can we somehow smooth the tempo over time
-# Ideally, we would like a very regular beat
-# Could account for the average space between the last several beats somehow?
-# We probably just want to use aubio to estimate the tempo!
-# It doesn't super matter if we're not exactly on the beat, it matters more that we're consistently spaced
-
-# IDEA: should we have rgbw state, strobe in a base DMXFixture class?
-# Most fixtures are going to support this?
-# Except some are RGB, some RGBW?
-# Maybe wait to refactor until we play with the current setup a bit
-# May want to use numpy to interpolate between configs
+IDEA: it will be easy to have multiple animation classes
+- you could have one for a more chill mode that's not music-reactive
 
 IDEA: we can have preprogrammed coordinates for the moving heads
 - Have them flash or change color to the beat, change target position to the beat
 - Sometimes can mirror the yaw rotation, but keep the pitch the same
-
-IDEA: mode with only red, orange and white
-IDEA: if we have 4x/5x, can make patterns, move left and right, etc.
-
 TODO: establish good/safe positions for moving heads
 - start with specifically the positions we don't want
 
+IDEA: mode with only red, orange and white
+IDEA: if we have 4x/5x small fixtures, can make patterns, move left and right, etc.
+- could even manually encode little sequences, ['xxxx', 'x__x']
+
 TODO: bpm estimation, may be a useful quantity
 
-TODO: would like to store color as tuple on fixtures
-- then we can directly store the rgbw value
-- also good for numpy interpolation
-
 TODO: trigger some events every 2 or 4 beats
-
-IDEA: it will be easy to have multiple animation classes
-- you could have one for a more chill mode that's not music-reactive
 
 -----------------------------------------------------------------------------
 

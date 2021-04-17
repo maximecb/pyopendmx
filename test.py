@@ -6,6 +6,19 @@ from dmx import *
 from audio import *
 import aubio
 
+def random_rgb():
+    while True:
+        color = (
+            random.choice([1, 0]),
+            random.choice([1, 0]),
+            random.choice([1, 0]),
+        )
+
+        if color != (0, 0, 0):
+            break
+
+    return color
+
 def random_rgbw():
     while True:
         color = (
