@@ -27,8 +27,11 @@ class Animation:
 
     def __init__(self, dmx):
         self.fix = RGBW12(chan_no=1)
+        self.strip = LedStrip4CH(chan_no=256)
         self.head = MovingHead(chan_no=1)
+
         dmx.add_device(self.fix)
+        dmx.add_device(self.strip)
         #dmx.add_device(self.head)
 
     def update(self, beat, beat_no, loudness, loud_vals):
@@ -39,26 +42,21 @@ class Animation:
         max_loudness = max(loud_vals)
 
         fix = self.fix
+        strip = self.strip
         head = self.head
 
         if beat:
             r, g, b, w = random_color()
 
-            # TODO: flash with loudness
-            # Need some estimate of max loudness
-            # Also need to use np.clip(val, min, max)
+            #print(loudness, max_loudness, dimming)
 
-            dimming = loudness / max_loudness
-
-            print(loudness, max_loudness, dimming)
-
-            fix.dimming = dimming
+            fix.dimming = 1
             fix.r = r
             fix.g = g
             fix.b = b
             fix.w = w
 
-            head.dimming = dimming
+            head.dimming = 1
             head.r = r
             head.g = g
             head.b = b
@@ -70,13 +68,18 @@ class Animation:
             head.pan = random.uniform(0, 1)
             head.tilt = random.uniform(0.4, 0.6)
 
+            strip.dimming = 1
+            strip.ch1 = 1
+
         else:
             # Decay
             head.dimming = head.dimming * 0.7
             fix.dimming = fix.dimming * 0.8
+            strip.dimming = strip.dimming * 0.7
 
-
-
+        #new_dimming = (loudness / max_loudness) ** 4
+        #strip.dimming = new_dimming
+        #strip.ch1 = 1
 
 
 
@@ -107,14 +110,19 @@ while True:
     samples, overflowed = stream.read(hop_s)
     samples = samples.squeeze()
 
-    # Note: we can call o.get_last_s() to get the sample where the beat occurred
-    beat = a_tempo(samples)
-
     loudness = np.std(samples)
     loud_vals.append(loudness)
 
     if (len(loud_vals) > 500):
         loud_vals.pop(0)
+
+    # Loudness threshold for beat detection
+    # Stops beats when the music stops
+    if max(loud_vals[-10:]) < 0.1:
+        beat = False
+    else:
+        # Note: we can call o.get_last_s() to get the sample where the beat occurred
+        beat = a_tempo(samples)
 
     anim.update(beat, beat_no, loudness, loud_vals)
 

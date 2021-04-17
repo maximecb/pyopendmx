@@ -6,6 +6,7 @@ import numpy as np
 
 def map_to(val, min, max):
     assert max > min
+    val = np.clip(val, 0, 1)
     return int(round(min + val * (max - min)))
 
 class DMXUniverse:
@@ -184,7 +185,7 @@ class LedStrip4CH(DMXDevice):
         super().__init__(chan_no, num_chans=4)
         self.dimming = 1
         self.ch1 = 0
-        self.ch1 = 0
+        self.ch2 = 0
         self.ch3 = 0
         self.ch4 = 0
 
