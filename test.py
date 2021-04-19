@@ -8,27 +8,27 @@ import aubio
 
 def random_rgb():
     while True:
-        color = (
+        color = np.array([
             random.choice([1, 0]),
             random.choice([1, 0]),
             random.choice([1, 0]),
-        )
+        ])
 
-        if color != (0, 0, 0):
+        if color.any():
             break
 
     return color
 
 def random_rgbw():
     while True:
-        color = (
+        color = np.array([
             random.choice([1, 0]),
             random.choice([1, 0]),
             random.choice([1, 0]),
             random.choice([1, 0]),
-        )
+        ])
 
-        if color != (0, 0, 0, 0):
+        if color.any():
             break
 
     return color
@@ -59,43 +59,26 @@ class Animation:
         head = self.head
 
         if beat:
-            r, g, b, w = random_rgbw()
+            rgbw = random_rgbw()
 
-            fix.dimming = 1
-            fix.r = r
-            fix.g = g
-            fix.b = b
-            fix.w = w
-
-            head.dimming = 1
-            head.r = r
-            head.g = g
-            head.b = b
-            head.w = w
+            fix.rgbw = rgbw
 
             # TODO: only change position every 2 or 4 beats
-            head.speed = 0.25
-            head.dimming = 0.25
-            head.pan = random.uniform(0, 1)
-            head.tilt = random.uniform(0.4, 0.6)
+            # Maybe go on and off every 2 beats or some such?
+            #head.rgbw = rgbw
+            #head.speed = 0.25
+            #head.dimming = 0.25
+            #head.pan = random.uniform(0, 1)
+            #head.tilt = random.uniform(0.4, 0.6)
 
-            strip.dimming = 1
             strip.ch1 = 1
 
         else:
             # Decay
-            head.dimming = head.dimming * 0.7
-            fix.dimming = fix.dimming * 0.8
-            strip.dimming = strip.dimming * 0.7
+            fix.rgbw = fix.rgbw * 0.7
+            strip.ch1 = strip.ch1 * 0.7
 
-        #new_dimming = (loudness / max_loudness) ** 4
-        #strip.dimming = new_dimming
-        #strip.ch1 = 1
-
-
-
-
-
+#############################################################################
 
 dmx = DMXUniverse()
 

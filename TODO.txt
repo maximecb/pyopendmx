@@ -8,8 +8,6 @@ TODO: establish good/safe positions for moving heads
 - start with specifically the positions we don't want
 
 IDEA: mode with only red, orange and white
-IDEA: if we have 4x/5x small fixtures, can make patterns, move left and right, etc.
-- could even manually encode little sequences, ['xxxx', 'x__x']
 
 TODO: bpm estimation, may be a useful quantity
 
@@ -24,18 +22,26 @@ We have multiple quantities we want to track
 - Would the fixtures just be global?
 - Maybe we can init with the dmx thread
 
+TODO: animation patterns with 4 small fixtures
+- move left/right
+- could even manually encode little sequences, ['xxxx', 'x__x']
+- could start prototyping with just 2
+
 TODO: method in animation to have everything strobe
+- strobe(val)
+- trigger when intensity above normal, keep for 8 or 16 beats?
 
-TODO: make colors be assignable as numpy arrays, easily assignable
 
-TODO: random_rgb and random_rgbw
+
+
+
+
+
+[DONE] TODO: implement fix.rgbw field, use numpy array
+- can then dispense with dimming for now?
+
+[DONE] TODO: random_rgb and random_rgbw
 - return numpy arrays
-
-
-
-
-
-
 
 [DONE] TODO: make dmx set support iterables
 hasattr(name, '__len__'):

@@ -92,10 +92,7 @@ class RGBWSpotLigh(DMXDevice):
     def __init__(self, name, chan_no):
         super().__init__(name, chan_no, num_chans=6)
         self.dimming = 1
-        self.r = 0
-        self.g = 0
-        self.b = 0
-        self.w = 0
+        self.rgbw = rgbw
         self.strobe = 0
 
     def update(self, dmx):
@@ -104,10 +101,7 @@ class RGBWSpotLigh(DMXDevice):
         else:
             dmx.set_float(self.chan_no, 1, strobe, 135, 191)
 
-        dmx.set_float(self.chan_no, 2, self.r * self.dimming)
-        dmx.set_float(self.chan_no, 3, self.g * self.dimming)
-        dmx.set_float(self.chan_no, 4, self.b * self.dimming)
-        dmx.set_float(self.chan_no, 5, self.w * self.dimming)
+        dmx.set_float(self.chan_no, 2, self.rgbw * self.dimming)
 
 class RGBW12(DMXDevice):
     """
@@ -125,10 +119,7 @@ class RGBW12(DMXDevice):
     def __init__(self, name, chan_no):
         super().__init__(name, chan_no, num_chans=8)
         self.dimming = 1
-        self.r = 0
-        self.g = 0
-        self.b = 0
-        self.w = 0
+        self.rgbw = np.array([0, 0, 0, 0])
         self.strobe = 0
 
     def update(self, dmx):
@@ -136,10 +127,7 @@ class RGBW12(DMXDevice):
         dmx.set_float(self.chan_no, 2, self.strobe, 0, 191)
         dmx.set_float(self.chan_no, 3, 0)
         dmx.set_float(self.chan_no, 4, 0)
-        dmx.set_float(self.chan_no, 5, self.r)
-        dmx.set_float(self.chan_no, 6, self.g)
-        dmx.set_float(self.chan_no, 7, self.b)
-        dmx.set_float(self.chan_no, 8, self.w)
+        dmx.set_float(self.chan_no, 5, self.rgbw)
 
 class MovingHead(DMXDevice):
     """
@@ -162,10 +150,7 @@ class MovingHead(DMXDevice):
         self.tilt = 0
         self.speed = 0
         self.dimming = 1
-        self.r = 0
-        self.g = 0
-        self.b = 0
-        self.w = 0
+        self.rgbw = np.array([0, 0, 0, 0])
         self.strobe = 0
 
     def update(self, dmx):
@@ -174,10 +159,7 @@ class MovingHead(DMXDevice):
         dmx.set_float(self.chan_no, 3, 1 - self.speed)
         dmx.set_float(self.chan_no, 4, self.dimming)
         dmx.set_float(self.chan_no, 5, self.strobe)
-        dmx.set_float(self.chan_no, 6, self.r)
-        dmx.set_float(self.chan_no, 7, self.g)
-        dmx.set_float(self.chan_no, 8, self.b)
-        dmx.set_float(self.chan_no, 9, self.w)
+        dmx.set_float(self.chan_no, 6, self.rgbw)
 
 class LedStrip4CH(DMXDevice):
     """
