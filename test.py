@@ -5,7 +5,6 @@ import math
 import random
 import threading
 from dmx import *
-from audio import *
 import aubio
 
 def random_rgb():

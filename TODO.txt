@@ -25,7 +25,11 @@ We have multiple quantities we want to track
 TODO: animation patterns with 4 small fixtures
 - move left/right
 - could even manually encode little sequences, ['xxxx', 'x__x']
-- could start prototyping with just 2 fixtueres
+- could start prototyping with just 2 fixtures
+- Could have a fixed sequence, and when over, jump to a random
+  position in the sequence, or reshuffle it every n times
+=> start with just randomly selecting either or both of each two kinds of fixtures
+=> each fix has same address
 
 TODO: method in animation to have everything strobe
 - anim.all_strobe(val) # val in [0, 1]

@@ -6,12 +6,13 @@ your favorite merchant website for "OpenDMX" to find options.
 # Installation
 
 ```
-# On MacOS
+# On MacOS, install required libraries
 brew install --build-from-source libusb
 
-# On Ubuntu or Raspbian
+# On Ubuntu or Raspbian, install required libraries
 sudo apt-get install libportaudio2
 
+# Install required Python packages
 pip3 install pyftdi numpy sounddevice aubio
 ```
 
