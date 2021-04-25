@@ -25,10 +25,10 @@ We have multiple quantities we want to track
 TODO: animation patterns with 4 small fixtures
 - move left/right
 - could even manually encode little sequences, ['xxxx', 'x__x']
-- could start prototyping with just 2
+- could start prototyping with just 2 fixtueres
 
 TODO: method in animation to have everything strobe
-- strobe(val)
+- anim.all_strobe(val) # val in [0, 1]
 - trigger when intensity above normal, keep for 8 or 16 beats?
 
 
