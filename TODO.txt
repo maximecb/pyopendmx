@@ -31,6 +31,8 @@ TODO: animation patterns with 4 small fixtures
 => start with just randomly selecting either or both of each two kinds of fixtures
 => each fix has same address
 
+TODO: warn when adding a device if partial/incomplete overlap in channel numbers
+
 TODO: method in animation to have everything strobe
 - anim.all_strobe(val) # val in [0, 1]
 - trigger when intensity above normal, keep for 8 or 16 beats?

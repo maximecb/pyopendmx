@@ -47,6 +47,16 @@ class DMXUniverse:
             self[start_chan + chan_no - 1] = int_val
 
     def add_device(self, device):
+        # Check for partial channel overlaps between devices, which
+        # are probably an error
+        for other in self.devices:
+            # Two devices with the same type and the same channel are probably ok
+            if device.chan_no == other.chan_no and type(device) == type(other):
+                continue
+
+            if device.chan_overlap(other):
+                print('WARNING: partial channel overlap between devices "{}" and "{}"'.format(device, other))
+
         self.devices.append(device)
 
     def start_dmx_thread(self):
@@ -75,10 +85,19 @@ class DMXDevice:
         self.chan_no = chan_no
         self.num_chans = num_chans
 
+    def chan_overlap(this, that):
+        this_last = this.chan_no + (this.num_chans - 1)
+        that_last = that.chan_no + (that.num_chans - 1)
+
+        return (
+            (this.chan_no >= that.chan_no and this.chan_no <= that_last) or
+            (that.chan_no >= this.chan_no and that.chan_no <= this_last)
+        )
+
     def update(self, dmx):
         raise NotImplementedError
 
-class RGBWSpotLigh(DMXDevice):
+class RGBWSpotLight(DMXDevice):
     """
     Small RGBW spotlight
     CH1: effect (0 no effect, 135-239 strobe)
