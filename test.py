@@ -4,8 +4,10 @@ import time
 import math
 import random
 import threading
-from dmx import *
 import aubio
+import numpy as np
+import sounddevice as sd
+from dmx import *
 
 def random_rgb():
     while True:
@@ -41,18 +43,21 @@ class Animation:
 
     def __init__(self, dmx):
         self.fix1 = RGBW12(name="fix1", chan_no=1)
-        self.fix2 = RGBW12(name="fix2", chan_no=10)
-
-        self.head1 = MovingHead(name="head", chan_no=20)
-        self.head2 = MovingHead(name="head", chan_no=30)
+        self.fix2 = RGBW12(name="fix1", chan_no=10)
+        self.head1 = MovingHead(name="head1", chan_no=20)
 
         #self.strip = LedStrip4CH(name="strip", chan_no=256)
 
         dmx.add_device(self.fix1)
         dmx.add_device(self.fix2)
         dmx.add_device(self.head1)
-        dmx.add_device(self.head2)
         #dmx.add_device(self.strip)
+
+        self.head1.dimming = 0.50
+        self.head1.speed = 0.15
+
+        self.head1.pan = 0.33
+        self.head1.tilt = 0
 
     def update(self, beat, beat_no, loudness, loud_vals):
         """
@@ -61,29 +66,34 @@ class Animation:
 
         max_loudness = max(loud_vals)
 
-        fix = self.fix
-        strip = self.strip
-        head = self.head
+        fix1 = self.fix1
+        fix2 = self.fix2
+        head = self.head1
 
         if beat:
             rgbw = random_rgbw()
 
-            fix.rgbw = rgbw
+            fix1_on, fix2_on = random.choice([
+                [1, 0],
+                [0, 1],
+                [1, 1]
+            ])
 
-            # TODO: only change position every 2 or 4 beats
-            # Maybe go on and off every 2 beats or some such?
-            #head.rgbw = rgbw
-            #head.speed = 0.25
-            #head.dimming = 0.25
-            #head.pan = random.uniform(0, 1)
-            #head.tilt = random.uniform(0.4, 0.6)
-
-            strip.ch1 = 1
+            if fix1_on:
+                fix1.rgbw = rgbw
+            if fix2_on:
+                fix2.rgbw = rgbw
+            
+            head.rgbw = rgbw
+            if beat_no % 4 == 0:
+                head.pan = random.uniform(0.15, 0.50)
+                head.tilt = random.uniform(0.00, 0.40)
 
         else:
             # Decay
-            fix.rgbw = fix.rgbw * 0.7
-            strip.ch1 = strip.ch1 * 0.7
+            fix1.rgbw = fix1.rgbw * 0.7
+            fix2.rgbw = fix2.rgbw * 0.7
+            head.rgbw = head.rgbw * 0.7
 
 #############################################################################
 
@@ -117,9 +127,11 @@ while True:
     if (len(loud_vals) > 500):
         loud_vals.pop(0)
 
+    print(loudness)
+
     # Loudness threshold for beat detection
     # Stops beats when the music stops
-    if max(loud_vals[-10:]) < 0.1:
+    if max(loud_vals[-10:]) < 0.05:
         beat = False
     else:
         # Note: we can call o.get_last_s() to get the sample where the beat occurred

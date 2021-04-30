@@ -22,17 +22,6 @@ We have multiple quantities we want to track
 - Would the fixtures just be global?
 - Maybe we can init with the dmx thread
 
-TODO: animation patterns with 4 small fixtures
-- move left/right
-- could even manually encode little sequences, ['xxxx', 'x__x']
-- could start prototyping with just 2 fixtures
-- Could have a fixed sequence, and when over, jump to a random
-  position in the sequence, or reshuffle it every n times
-=> start with just randomly selecting either or both of each two kinds of fixtures
-=> each fix has same address
-
-TODO: warn when adding a device if partial/incomplete overlap in channel numbers
-
 TODO: method in animation to have everything strobe
 - anim.all_strobe(val) # val in [0, 1]
 - trigger when intensity above normal, keep for 8 or 16 beats?
@@ -42,6 +31,11 @@ TODO: method in animation to have everything strobe
 
 
 
+[DONE] TODO: try flashing with just fixtures, moving heads, or both
+
+[DONE] TODO: try animating all devices at once
+
+[DONE] TODO: warn when adding a device if partial/incomplete overlap in channel numbers
 
 [DONE] TODO: implement fix.rgbw field, use numpy array
 - can then dispense with dimming for now?

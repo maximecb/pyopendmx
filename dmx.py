@@ -55,7 +55,7 @@ class DMXUniverse:
                 continue
 
             if device.chan_overlap(other):
-                print('WARNING: partial channel overlap between devices "{}" and "{}"'.format(device, other))
+                raise 'ERROR: partial channel overlap between devices "{}" and "{}"'.format(device, other)
 
         self.devices.append(device)
 
@@ -161,6 +161,17 @@ class MovingHead(DMXDevice):
     CH7: G 0-255
     CH8: B 0-255
     CH9: W 0-255
+
+    Pan:
+    0.00 is pointing back
+    0.15 is pointing left
+    0.33 is pointing forward
+    0.50 is pointing right
+
+    Tilt:
+    0.00 is pointing forward
+    0.50 is fully up
+    1.00 is pointing back
     """
 
     def __init__(self, name, chan_no):
