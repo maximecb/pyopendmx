@@ -43,7 +43,7 @@ class Animation:
 
     def __init__(self, dmx):
         self.fix1 = RGBW12(name="fix1", chan_no=1)
-        self.fix2 = RGBW12(name="fix1", chan_no=10)
+        self.fix2 = RGBW12(name="fix2", chan_no=10)
         self.head1 = MovingHead(name="head1", chan_no=20)
 
         #self.strip = LedStrip4CH(name="strip", chan_no=256)
@@ -53,8 +53,8 @@ class Animation:
         dmx.add_device(self.head1)
         #dmx.add_device(self.strip)
 
-        self.head1.dimming = 0.50
-        self.head1.speed = 0.15
+        self.head1.dimming = 0.20
+        self.head1.speed = 0.25
 
         self.head1.pan = 0.33
         self.head1.tilt = 0
@@ -69,6 +69,10 @@ class Animation:
         fix1 = self.fix1
         fix2 = self.fix2
         head = self.head1
+
+        #fix1.strobe = 1
+        #fix2.strobe = 1
+        #head.strobe = 0.95
 
         if beat:
             rgbw = random_rgbw()
@@ -85,15 +89,23 @@ class Animation:
                 fix2.rgbw = rgbw
             
             head.rgbw = rgbw
-            if beat_no % 4 == 0:
+            #if beat_no % 4 == 0:
+
+            #head.pan = np.clip(head.pan + random.uniform(-0.1, 0.1), 0.15, 0.50)
+            #head.tilt = np.clip(head.tilt + random.uniform(-0.1, 0.1), 0.00, 0.40)
+
+            if beat_no % 2 == 0:
                 head.pan = random.uniform(0.15, 0.50)
                 head.tilt = random.uniform(0.00, 0.40)
+
+
 
         else:
             # Decay
             fix1.rgbw = fix1.rgbw * 0.7
             fix2.rgbw = fix2.rgbw * 0.7
-            head.rgbw = head.rgbw * 0.7
+            head.rgbw = head.rgbw * 0.95
+            pass
 
 #############################################################################
 

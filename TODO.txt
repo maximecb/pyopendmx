@@ -4,27 +4,31 @@ IDEA: it will be easy to have multiple animation classes
 IDEA: we can have preprogrammed coordinates for the moving heads
 - Have them flash or change color to the beat, change target position to the beat
 - Sometimes can mirror the yaw rotation, but keep the pitch the same
-TODO: establish good/safe positions for moving heads
-- start with specifically the positions we don't want
 
 IDEA: mode with only red, orange and white
 
 TODO: bpm estimation, may be a useful quantity
 
-TODO: trigger some events every 2 or 4 beats
+IDEA: we could make a DSL for this and actually specify a little state machine
+https://wickstrom.tech/programming/2021/05/03/specifying-state-machines-with-temporal-logic.html
+- Maybe something like LTL
+- Or something with states and conditions/annotations on edges
 
 -----------------------------------------------------------------------------
 
-We have multiple quantities we want to track
-- Loudness, with multiple windows (instant, short, long)
-- Beat number
-- Maybe we can have an animation class with a start_thread method
-- Would the fixtures just be global?
-- Maybe we can init with the dmx thread
+TODO: mode to have the moving heads just very slowly move around?
+- can rotate in all directions?
 
-TODO: method in animation to have everything strobe
-- anim.all_strobe(val) # val in [0, 1]
+TODO: method in animation to trigger strobing
+- anim.strobe(val) # val in [0, 1]
 - trigger when intensity above normal, keep for 8 or 16 beats?
+- but we need some kind of move we keep track of?
+  - like a state machine
+- could we build a state machine with different update functions?
+
+TODO: can we make a mini web interface with buttons/links?
+https://docs.python.org/3/library/http.server.html
+https://flaviocopes.com/python-http-server/
 
 
 
