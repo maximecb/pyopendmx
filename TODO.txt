@@ -14,10 +14,9 @@ https://wickstrom.tech/programming/2021/05/03/specifying-state-machines-with-tem
 - Maybe something like LTL
 - Or something with states and conditions/annotations on edges
 
------------------------------------------------------------------------------
-
-TODO: mode to have the moving heads just very slowly move around?
-- can rotate in all directions?
+TODO: can we make a mini web interface with buttons/links?
+https://docs.python.org/3/library/http.server.html
+https://flaviocopes.com/python-http-server/
 
 TODO: method in animation to trigger strobing
 - anim.strobe(val) # val in [0, 1]
@@ -26,9 +25,11 @@ TODO: method in animation to trigger strobing
   - like a state machine
 - could we build a state machine with different update functions?
 
-TODO: can we make a mini web interface with buttons/links?
-https://docs.python.org/3/library/http.server.html
-https://flaviocopes.com/python-http-server/
+-----------------------------------------------------------------------------
+
+TODO: mode to have the moving heads just very slowly move around?
+- can rotate in all directions?
+
 
 
 

@@ -1,10 +1,8 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
-
-
+import threading
 
 # TODO: can we create the handler ourself, so we can pass it a reference
 # to our WebServer object?
-
 
 class HTTPHandler(BaseHTTPRequestHandler):
     def do_GET(self):
@@ -23,10 +21,8 @@ class HTTPHandler(BaseHTTPRequestHandler):
         message = "Hello, World! Here is a POST response"
         self.wfile.write(bytes(message, "utf8"))
 
-
-
 class WebServer:
-    def __init__(self)
+    def __init__(self):
         pass
 
     def start_server_thread(delf):
@@ -36,7 +32,3 @@ class WebServer:
 
         thread = threading.Thread(target=thread_fn, args=(), daemon=True)
         thread.start()
-
-
-
-

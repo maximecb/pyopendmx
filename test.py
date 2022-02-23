@@ -45,13 +45,12 @@ class Animation:
         self.fix1 = RGBW12(name="fix1", chan_no=1)
         self.fix2 = RGBW12(name="fix2", chan_no=10)
         self.head1 = MovingHead(name="head1", chan_no=20)
-
-        #self.strip = LedStrip4CH(name="strip", chan_no=256)
+        self.strip = LedStrip4CH(name="strip", chan_no=256)
 
         dmx.add_device(self.fix1)
         dmx.add_device(self.fix2)
         dmx.add_device(self.head1)
-        #dmx.add_device(self.strip)
+        dmx.add_device(self.strip)
 
         self.head1.dimming = 0.20
         self.head1.speed = 0.25
@@ -69,6 +68,7 @@ class Animation:
         fix1 = self.fix1
         fix2 = self.fix2
         head = self.head1
+        strip = self.strip
 
         #fix1.strobe = 1
         #fix2.strobe = 1
