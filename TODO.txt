@@ -13,28 +13,31 @@ IDEA: we could make a DSL for this and actually specify a little state machine
 https://wickstrom.tech/programming/2021/05/03/specifying-state-machines-with-temporal-logic.html
 - Maybe something like LTL
 - Or something with states and conditions/annotations on edges
+- could we build a state machine with different update functions?
 
 TODO: can we make a mini web interface with buttons/links?
 https://docs.python.org/3/library/http.server.html
 https://flaviocopes.com/python-http-server/
 
-TODO: method in animation to trigger strobing
-- anim.strobe(val) # val in [0, 1]
-- trigger when intensity above normal, keep for 8 or 16 beats?
-- but we need some kind of move we keep track of?
-  - like a state machine
-- could we build a state machine with different update functions?
-
 -----------------------------------------------------------------------------
 
 TODO: mode to have the moving heads just very slowly move around?
 - can rotate in all directions?
+=> lower priority
+
+TODO: trigger strobing when intensity above normal
+- keep for 8 or 16 beats?
+  - can set strobe on or off once every N beats
 
 
 
 
+[DONE] TODO: need to have a 4-beat pattern we repeat 4x for the fixtures
+- can write a method to generate this pattern
 
+[DONE] TODO: try to get the LED strip working
 
+-----------------------------------------------------------------------------
 
 [DONE] TODO: try flashing with just fixtures, moving heads, or both
 

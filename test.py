@@ -58,6 +58,30 @@ class Animation:
         self.head1.pan = 0.33
         self.head1.tilt = 0
 
+    def gen_sequence(self, num_steps, num_elems):
+        """
+        Ideally what we want is a vector
+        [num_steps, num_elems, 4]
+        We could start by just genetating colors and then masking
+        """
+
+        seq = np.zeros(shape=(num_steps, num_elems, 4))
+
+        for step in range(0, num_steps):
+            # Pick one color for this step
+            color = random_rgbw()
+
+            # Generate a mask with at least one nonzero element
+            while True:
+                mask = np.random.choice(a=[0, 1], size=(num_elems,), p=[0.5, 0.5])
+                if mask.any():
+                    break
+
+            for elem in range(0, num_elems):
+                seq[step, elem] = color * mask[elem]
+
+        return seq
+
     def update(self, beat, beat_no, loudness, loud_vals):
         """
         Update the animation
@@ -75,8 +99,18 @@ class Animation:
         #head.strobe = 0.95
 
         if beat:
+            # Every 4 bars
+            if beat_no % 16 == 0:
+                self.fix_seq = self.gen_sequence(num_steps=4, num_elems=2)
+
+            # Every 2 beats
+            if beat_no % 2 == 0:
+                head.pan = random.uniform(0.15, 0.50)
+                head.tilt = random.uniform(0.00, 0.40)
+
             rgbw = random_rgbw()
 
+            """
             fix1_on, fix2_on = random.choice([
                 [1, 0],
                 [0, 1],
@@ -87,24 +121,21 @@ class Animation:
                 fix1.rgbw = rgbw
             if fix2_on:
                 fix2.rgbw = rgbw
+            """
+
+            fix1.rgbw = self.fix_seq[beat_no % 4, 0]
+            fix2.rgbw = self.fix_seq[beat_no % 4, 1]
             
             head.rgbw = rgbw
-            #if beat_no % 4 == 0:
 
-            #head.pan = np.clip(head.pan + random.uniform(-0.1, 0.1), 0.15, 0.50)
-            #head.tilt = np.clip(head.tilt + random.uniform(-0.1, 0.1), 0.00, 0.40)
-
-            if beat_no % 2 == 0:
-                head.pan = random.uniform(0.15, 0.50)
-                head.tilt = random.uniform(0.00, 0.40)
-
-
+            strip.ch1 = 1
 
         else:
             # Decay
             fix1.rgbw = fix1.rgbw * 0.7
             fix2.rgbw = fix2.rgbw * 0.7
             head.rgbw = head.rgbw * 0.95
+            strip.ch1 = strip.ch1 * 0.8
             pass
 
 #############################################################################

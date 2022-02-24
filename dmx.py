@@ -38,6 +38,7 @@ class DMXUniverse:
     def set_float(self, start_chan, chan_no, val, min=0, max=255):
         assert (chan_no >= 1)
 
+        # If val is an array of values
         if hasattr(val, '__len__'):
             for i in range(len(val)):
                 int_val = map_to(val[i], min, max)
@@ -86,6 +87,10 @@ class DMXDevice:
         self.num_chans = num_chans
 
     def chan_overlap(this, that):
+        """
+        Check if two devices have overlapping channels
+        """
+
         this_last = this.chan_no + (this.num_chans - 1)
         that_last = that.chan_no + (that.num_chans - 1)
 
