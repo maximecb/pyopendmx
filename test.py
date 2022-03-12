@@ -52,7 +52,7 @@ class Animation:
         dmx.add_device(self.head1)
         dmx.add_device(self.strip)
 
-        self.head1.dimming = 0.20
+        self.head1.dimming = 0.40
         self.head1.speed = 0.25
 
         self.head1.pan = 0.33

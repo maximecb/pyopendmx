@@ -29,6 +29,9 @@ TODO: trigger strobing when intensity above normal
 - keep for 8 or 16 beats?
   - can set strobe on or off once every N beats
 
+IDEA: have a few LFOS to vary brightness
+
+IDEA: light train code, can also do symmetries
 
 
 
