@@ -20,5 +20,4 @@ pip3 install pyftdi numpy sounddevice aubio
 
 The `dmx.py` source file contains reusable code to interface with DMX devices using an OpenDMX FTDI interface.
 
-The `test.py` script contains my own code to animate lights based on beat detection, which you can
-take inspiration from.
+The `test-beatdetect.py` script contains my own code to animate lights based on beat detection, which you can take inspiration from.

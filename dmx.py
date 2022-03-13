@@ -10,6 +10,9 @@ def map_to(val, min, max):
     return int(round(min + val * (max - min)))
 
 class DMXUniverse:
+    """
+    Interface to an ENTTEC OpenDMX (FTDI) DMX interface
+    """
     def __init__(self, url='ftdi://ftdi:232:AL6E8JFW/1'):
         self.url = url
 
@@ -33,6 +36,9 @@ class DMXUniverse:
         assert (idx <= 512)
         assert isinstance(val, int)
         assert (val >= 0 and val <= 255)
+
+        print(idx, val)
+
         self.data[idx] = val
 
     def set_float(self, start_chan, chan_no, val, min=0, max=255):
@@ -199,10 +205,10 @@ class MovingHead(DMXDevice):
 class LedStrip4CH(DMXDevice):
     """
     4-channel DMX LED strip decoder
-    CH1: CH1/R 0-255
-    CH2: CH2/G 0-255
-    CH3: CH3/B 0-255
-    CH4: CH4/W 0-255
+    CH1: R 0-255
+    CH2: G 0-255
+    CH3: B 0-255
+    CH4: W 0-255
     """
 
     def __init__(self, name, chan_no):
@@ -218,3 +224,22 @@ class LedStrip4CH(DMXDevice):
         dmx.set_float(self.chan_no, 2, self.ch2 * self.dimming)
         dmx.set_float(self.chan_no, 3, self.ch3 * self.dimming)
         dmx.set_float(self.chan_no, 4, self.ch4 * self.dimming)
+
+class Relay3CH(DMXDevice):
+    """
+    3-channel on/off relay decoder
+    CH1: 0 or 1
+    CH2: 0 or 1
+    CH3: 0 or 1
+    """
+
+    def __init__(self, name, chan_no):
+        super().__init__(name, chan_no, num_chans=4)
+        self.ch1 = 0
+        self.ch2 = 0
+        self.ch3 = 0
+
+    def update(self, dmx):
+        dmx[self.chan_no + 0] = 255 if self.ch1 else 0
+        dmx[self.chan_no + 1] = 255 if self.ch2 else 0
+        dmx[self.chan_no + 2] = 255 if self.ch3 else 0
