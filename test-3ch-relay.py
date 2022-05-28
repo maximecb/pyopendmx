@@ -15,14 +15,13 @@ dmx.add_device(relay3ch)
 
 dmx.start_dmx_thread()
 
-
 while True:
-    relay3ch.ch1 = 1
-    time.sleep(0.5)
-    relay3ch.ch1 = 0
-    time.sleep(0.5)
-
+#    relay3ch.ch1 = 1
+#    time.sleep(0.5)
     relay3ch.ch2 = 1
     time.sleep(0.5)
-    relay3ch.ch2 = 0
-    time.sleep(0.5)
+#
+#    relay3ch.ch2 = 1
+#    time.sleep(0.5)
+#    relay3ch.ch2 = 0
+#    time.sleep(0.5)

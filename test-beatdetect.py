@@ -46,11 +46,13 @@ class Animation:
         self.fix2 = RGBW12(name="fix2", chan_no=10)
         self.head1 = MovingHead(name="head1", chan_no=20)
         self.strip = LedStrip4CH(name="strip", chan_no=256)
+        self.ped = Relay3CH(name="ped", chan_no=128)
 
         dmx.add_device(self.fix1)
         dmx.add_device(self.fix2)
         dmx.add_device(self.head1)
         dmx.add_device(self.strip)
+        dmx.add_device(self.ped)
 
         self.head1.dimming = 0.40
         self.head1.speed = 0.25
@@ -108,27 +110,16 @@ class Animation:
                 head.pan = random.uniform(0.15, 0.50)
                 head.tilt = random.uniform(0.00, 0.40)
 
-            rgbw = random_rgbw()
-
-            """
-            fix1_on, fix2_on = random.choice([
-                [1, 0],
-                [0, 1],
-                [1, 1]
-            ])
-
-            if fix1_on:
-                fix1.rgbw = rgbw
-            if fix2_on:
-                fix2.rgbw = rgbw
-            """
-
             fix1.rgbw = self.fix_seq[beat_no % 4, 0]
             fix2.rgbw = self.fix_seq[beat_no % 4, 1]
-            
+
+            rgbw = random_rgbw()
             head.rgbw = rgbw
 
             strip.ch1 = 1
+
+            self.ped.ch1 = random.uniform(0, 1) > 0.5
+            self.ped.ch2 = random.uniform(0, 1) > 0.5
 
         else:
             # Decay
@@ -136,6 +127,14 @@ class Animation:
             fix2.rgbw = fix2.rgbw * 0.7
             head.rgbw = head.rgbw * 0.95
             strip.ch1 = strip.ch1 * 0.8
+
+
+            self.ped.ch1 = self.ped.ch1 * 0.9 if self.ped.ch1 * 0.9 > 0.05 else 0
+            self.ped.ch1 = self.ped.ch2 * 0.9 if self.ped.ch2 * 0.9 > 0.05 else 0
+
+
+
+
             pass
 
 #############################################################################
