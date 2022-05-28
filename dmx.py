@@ -36,9 +36,6 @@ class DMXUniverse:
         assert (idx <= 512)
         assert isinstance(val, int)
         assert (val >= 0 and val <= 255)
-
-        print(idx, val)
-
         self.data[idx] = val
 
     def set_float(self, start_chan, chan_no, val, min=0, max=255):
