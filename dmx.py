@@ -108,6 +108,7 @@ class DMXDevice:
 class RGBWSpotLight(DMXDevice):
     """
     Small RGBW spotlight
+    NOTE: needs to be set in mode A_xxx for DMX control
     CH1: effect (0 no effect, 135-239 strobe)
     CH2: R 0-255
     CH3: G 0-255
@@ -119,14 +120,14 @@ class RGBWSpotLight(DMXDevice):
     def __init__(self, name, chan_no):
         super().__init__(name, chan_no, num_chans=6)
         self.dimming = 1
-        self.rgbw = rgbw
+        self.rgbw = np.array([0, 0, 0, 0])
         self.strobe = 0
 
     def update(self, dmx):
         if self.strobe == 0:
-            dmx.set_float(self.chan_no, 1, 0)
+            dmx.set_float(self.chan_no, 1, 134)
         else:
-            dmx.set_float(self.chan_no, 1, strobe, 135, 191)
+            dmx.set_float(self.chan_no, 1, self.strobe, 135, 191)
 
         dmx.set_float(self.chan_no, 2, self.rgbw * self.dimming)
 
