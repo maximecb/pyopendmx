@@ -1,85 +1,14 @@
-IDEA: it will be easy to have multiple animation classes
-- you could have one for a more chill mode that's not music-reactive
+TODO: configure program to run on startup
+sudo nano /home/pi/.bashrc
 
-IDEA: we can have preprogrammed coordinates for the moving heads
-- Have them flash or change color to the beat, change target position to the beat
-- Sometimes can mirror the yaw rotation, but keep the pitch the same
+TODO: setup system with multiple modes and transitions
+- do we want animation classes?
 
-IDEA: mode with only red, orange and white
-
-TODO: bpm estimation, may be a useful quantity
-
-IDEA: we could make a DSL for this and actually specify a little state machine
-https://wickstrom.tech/programming/2021/05/03/specifying-state-machines-with-temporal-logic.html
-- Maybe something like LTL
-- Or something with states and conditions/annotations on edges
-- could we build a state machine with different update functions?
-
-TODO: can we make a mini web interface with buttons/links?
-https://docs.python.org/3/library/http.server.html
-https://flaviocopes.com/python-http-server/
-
------------------------------------------------------------------------------
-
-TODO: mode to have the moving heads just very slowly move around?
-- can rotate in all directions?
-=> lower priority
-
-TODO: trigger strobing when intensity above normal
-- keep for 8 or 16 beats?
-  - can set strobe on or off once every N beats
-
-IDEA: have a few LFOS to vary brightness
-
-IDEA: light train code, can also do symmetries
+TODO: test dmx device
+ftdi://ftdi:232:AB0PF4H1/1'
 
 
 
-[DONE] TODO: need to have a 4-beat pattern we repeat 4x for the fixtures
-- can write a method to generate this pattern
 
-[DONE] TODO: try to get the LED strip working
 
------------------------------------------------------------------------------
-
-[DONE] TODO: try flashing with just fixtures, moving heads, or both
-
-[DONE] TODO: try animating all devices at once
-
-[DONE] TODO: warn when adding a device if partial/incomplete overlap in channel numbers
-
-[DONE] TODO: implement fix.rgbw field, use numpy array
-- can then dispense with dimming for now?
-
-[DONE] TODO: random_rgb and random_rgbw
-- return numpy arrays
-
-[DONE] TODO: make dmx set support iterables
-hasattr(name, '__len__'):
-
-[DONE] TODO: give fixtures names
-
-[DONE] TODO: loudness estimation
-norm = np.linalg.norm(indata)*10
-- we also need to keep some kind of max, or simply a slower running average
-- loudness_fast_avg, loudness_slow_avg
-- use numpy.std(v)
-
-[DONE] TODO: create a shortcut method for setting dmx val
-dmx[self.chan_no + 0] = map_float_to(self.pan, 0, 255)
-- dmx.set_float(start_chan, chan_no, val, min=0, max=255)
-
-[DONE] TODO: create a class for the Docooler RGBW moving head
-
-[DONE] TODO: convert colors to FP values in [0, 1]
-
-[DONE] TODO: function to map [0, 1] value into range, map_to()
-- have fixtures use FP values for everything
-
-[DONE] TODO: max DMX update rate is 40Hz
-- add in comment, aim for 35Hz
-- measure time between updates, should be 25ms
-
-[DONE] TODO: DMXUniverse.start_dmx_thread()
-
-[DONE] TODO: DMXUniverse.add_fixture()
+[DONE] TODO: connect, test raspi
