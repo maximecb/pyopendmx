@@ -20,7 +20,7 @@ class DMXUniverse:
     """
     Interface to an ENTTEC OpenDMX (FTDI) DMX interface
     """
-    def __init__(self, url='ftdi://ftdi:232:AL6E8JFW/1'):
+    def __init__(self, url='ftdi://ftdi:232:AL6E8JZO/1'):
         self.url = url
         self.port = Ftdi.create_from_url(url)
         self.port.reset()

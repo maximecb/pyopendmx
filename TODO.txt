@@ -1,14 +1,14 @@
-TODO: configure program to run on startup
+TODO: configure script to run on startup
 sudo nano /home/pi/.bashrc
+
+TODO: use is_night() to just go to sleep
 
 TODO: setup system with multiple modes and transitions
 - do we want animation classes?
 
-TODO: test dmx device
-ftdi://ftdi:232:AB0PF4H1/1'
 
 
 
-
+[DONE] TODO: test dmx device
 
 [DONE] TODO: connect, test raspi
