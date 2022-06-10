@@ -9,13 +9,19 @@ def map_to(val, min, max):
     val = np.clip(val, 0, 1)
     return int(round(min + val * (max - min)))
 
+def show_devices():
+    """
+    List available FTDI devices
+    """
+
+    Ftdi.show_devices()
+
 class DMXUniverse:
     """
     Interface to an ENTTEC OpenDMX (FTDI) DMX interface
     """
     def __init__(self, url='ftdi://ftdi:232:AL6E8JFW/1'):
         self.url = url
-
         self.port = Ftdi.create_from_url(url)
         self.port.reset()
         self.port.set_baudrate(baudrate=250000)
@@ -85,6 +91,7 @@ class DMXUniverse:
 
 class DMXDevice:
     def __init__(self, name, chan_no, num_chans):
+        assert (chan_no >= 1)
         self.name = name
         self.chan_no = chan_no
         self.num_chans = num_chans
