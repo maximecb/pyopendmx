@@ -9,6 +9,8 @@ TODO: setup system with multiple modes and transitions
 
 
 
+
+
 [DONE] TODO: test dmx device
 
 [DONE] TODO: connect, test raspi

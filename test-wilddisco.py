@@ -7,6 +7,7 @@ import time
 import math
 import random
 from dmx import *
+from utils import *
 
 #############################################################################
 
@@ -31,10 +32,19 @@ dmx = DMXUniverse()
 #relay3ch = Relay3CH(name="strip", chan_no=128)
 #dmx.add_device(relay3ch)
 
-fix0 = RGBW12(name="fix0", chan_no=1)
-dmx.add_device(fix0)
+fix0 = dmx.add_device(RGBW12(name="fix0", chan_no=1))
+fix1 = dmx.add_device(RGBW12(name="fix0", chan_no=10))
+fix2 = dmx.add_device(RGBW12(name="fix0", chan_no=20))
+fix3 = dmx.add_device(RGBW12(name="fix0", chan_no=30))
 
 dmx.start_dmx_thread()
+
+
+
+
+
+
+
 
 
 
