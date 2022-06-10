@@ -68,6 +68,7 @@ class DMXUniverse:
                 raise Exception('partial channel overlap between devices "{}" and "{}"'.format(device.name, other.name))
 
         self.devices.append(device)
+        return device
 
     def start_dmx_thread(self):
         """
