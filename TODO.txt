@@ -1,15 +1,35 @@
+TODO: setup long purple strips for road?
+TODO: measure power usage of whole system with battery
+
 TODO: configure script to run on startup
 sudo nano /home/pi/.bashrc
 
 TODO: use is_night() to just go to sleep
+- need to set everything to black
 
-TODO: setup system with multiple modes and transitions
-- do we want animation classes?
+TODO: code to switch animation modes every N seconds
+- ideally something like 40+ seconds, then people might walk by
+  without noticing there are multiple animations at first
+TODO: store the time the last switch was performed
+
+TODO: implement SequenceAnim
+
+TODO: animation with everything on a single red sine
 
 
 
 
 
+
+
+
+[DONE] TODO: create a strobe animation
+
+[DONE] TODO: complete sine anim
+
+[DONE] TODO: create sine animation class
+
+[DONE] TODO: setup a 3ch relay module for eventual strips, chan 256
 
 [DONE] TODO: test dmx device
 
