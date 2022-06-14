@@ -80,42 +80,51 @@ class StrobeAnim:
         fix2.rgbw = rgbw
         fix3.rgbw = rgbw
 
-        strobe_speed = random.uniform(0.5, 1.0)
+        strobe_speed = random.uniform(0.65, 1.0)
         fix0.strobe = strobe_speed
         fix1.strobe = strobe_speed
         fix2.strobe = strobe_speed
         fix3.strobe = strobe_speed
+
+        self.start_time = time.time()
         
     def update(self, t, dt):
-        pass
+        dt = t - self.start_time
+        dimming = max(1 - (dt / 12), 0)
+        fix0.dimming = dimming
+        fix1.dimming = dimming
+        fix2.dimming = dimming
+        fix3.dimming = dimming
 
 class SequenceAnim:
     def __init__(self):
-        rgbw = random_rgbw()
-        fix0.rgbw = rgbw
-        fix1.rgbw = rgbw
-        fix2.rgbw = rgbw
-        fix3.rgbw = rgbw
-
-        # TODO: pick a random switching delay
+        self.switch_delay = random.uniform(1, 4)
+        self.switch_time = 0
+        self.next_idx = 0
+        
+    def switch(self):
+        self.switch_time = time.time()
+        for fix in fixs:
+            fix.dimming = 0
+        fixs[self.next_idx].dimming = 1
+        fixs[self.next_idx].rgbw = random_rgbw()
+        self.next_idx = (self.next_idx + 1) % len(fixs)
         
     def update(self, t, dt):
-        pass
+        if t - self.switch_time > self.switch_delay:
+            self.switch()
 
-        # TODO: randomly pick an active idx based on the time
-
-
-
+class PulseAnim:
+    pass
 
 
 
 animations = [
-    #SineAnim,
-    #StrobeAnim,
+    SineAnim,
+    StrobeAnim,
     SequenceAnim,
-
-
-    
+    #PulseAnim,
+    #RedSine,
 ]
 
 def change_anim():
@@ -123,29 +132,41 @@ def change_anim():
     Select a new random animation
     """
 
-    # TODO: reset the fixs
+    global last_change
 
+    # Reset the state of each light
+    for fix in fixs:
+        fix.dimming = 1
+        fix.strobe = 0
+        fix.rgbw = np.array([0, 0, 0, 0])
 
-    # Select and instantiate a random animation class
+    # Select a random animation class
     anim_class = random.choice(animations)
+
+    last_change = time.time()
+    
     return anim_class()
 
 curAnim = change_anim()
-
 lastT = time.time()
+last_change = 0
+change_delay = 10
 
 while True:
     t = time.time()
     dt = t - lastT
     lastT = t
-    print(t)
-    #print(curAnim.rate0)
+    #print(t)
 
     if is_night():
         print("night time")
         # TODO: set everything to black
         #continue
 
+    if t - last_change > change_delay:
+        change_anim()
+
+    # Update the current animation
     curAnim.update(t, dt)
 
     # Sleep 10ms

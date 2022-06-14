@@ -4,24 +4,36 @@ TODO: measure power usage of whole system with battery
 TODO: configure script to run on startup
 sudo nano /home/pi/.bashrc
 
+TODO: PulseAnim
+
 TODO: use is_night() to just go to sleep
 - need to set everything to black
 
-TODO: code to switch animation modes every N seconds
-- ideally something like 40+ seconds, then people might walk by
-  without noticing there are multiple animations at first
-TODO: store the time the last switch was performed
-
-TODO: implement SequenceAnim
-
 TODO: animation with everything on a single red sine
 
+TODO: first animation should be a test pattern
+- predictable sequence
+- everything white
+
+TODO: test wireless keyboard
+
+FIXME: every time we strobe, we get the same colors for some reason, wtf?
 
 
 
 
 
 
+
+[DONE] TODO: code to switch animation modes every N seconds
+- ideally something like 40+ seconds, then people might walk by
+  without noticing there are multiple animations at first
+  
+[DONE] TODO: store the time the last switch was performed
+
+[DONE] TODO: implement SequenceAnim
+
+[DONE] TODO: make strobe anim fade out over 12-15s
 
 [DONE] TODO: create a strobe animation
 
