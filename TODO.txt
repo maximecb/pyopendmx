@@ -9,21 +9,22 @@ TODO: PulseAnim
 TODO: use is_night() to just go to sleep
 - need to set everything to black
 
-TODO: animation with everything on a single red sine
-
 TODO: first animation should be a test pattern
 - predictable sequence
 - everything white
 
+TODO: animation with everything on a single red sine
+
 TODO: test wireless keyboard
 
-FIXME: every time we strobe, we get the same colors for some reason, wtf?
 
 
 
 
 
 
+
+[DONE] FIXME: every time we strobe, we get the same colors for some reason, wtf?
 
 [DONE] TODO: code to switch animation modes every N seconds
 - ideally something like 40+ seconds, then people might walk by

@@ -133,6 +133,9 @@ def change_anim():
     """
 
     global last_change
+    global cur_anim
+
+    print("changing animation")
 
     # Reset the state of each light
     for fix in fixs:
@@ -144,13 +147,15 @@ def change_anim():
     anim_class = random.choice(animations)
 
     last_change = time.time()
+    cur_anim = anim_class()
     
-    return anim_class()
+    return cur_anim
 
-curAnim = change_anim()
 lastT = time.time()
 last_change = 0
 change_delay = 10
+cur_anim = None
+change_anim()
 
 while True:
     t = time.time()
@@ -167,7 +172,7 @@ while True:
         change_anim()
 
     # Update the current animation
-    curAnim.update(t, dt)
+    cur_anim.update(t, dt)
 
     # Sleep 10ms
     time.sleep(0.01)
