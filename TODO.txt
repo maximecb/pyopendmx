@@ -1,21 +1,16 @@
-TODO: setup long purple strips for road?
 TODO: measure power usage of whole system with battery
+- plug the system in the daytime with all components, check power usage
+
+TODO: setup long purple strips for road?
 
 TODO: configure script to run on startup
 sudo nano /home/pi/.bashrc
-
-TODO: PulseAnim
-
-TODO: use is_night() to just go to sleep
-- need to set everything to black
 
 TODO: first animation should be a test pattern
 - predictable sequence
 - everything white
 
-TODO: animation with everything on a single red sine
-
-TODO: test wireless keyboard
+TODO: PulseAnim
 
 
 
@@ -23,6 +18,14 @@ TODO: test wireless keyboard
 
 
 
+
+[DONE] TODO: animation with everything on a single red sine
+
+[DONE] TODO: code for the led strip to animate on a sine
+
+[DONE] TODO: use is_night() to just go to sleep
+
+[DONE] TODO: test wireless keyboard
 
 [DONE] FIXME: every time we strobe, we get the same colors for some reason, wtf?
 

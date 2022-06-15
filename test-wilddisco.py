@@ -72,6 +72,19 @@ class SineAnim:
         fix2.rgbw = self.color2 * (1 + math.sin(self.phase2)) / 2
         fix3.rgbw = self.color3 * (1 + math.sin(self.phase3)) / 2
 
+class RedSineAnim:
+    def __init__(self):
+        self.phase0 = (3 * math.pi) / 2       
+        self.rate0 = random.uniform(0.20, 0.4)
+
+    def update(self, t, dt):
+        def update_phase(phase, rate, dt):
+            return phase + (rate * 2 * math.pi * dt)
+            
+        self.phase0 = update_phase(self.phase0, self.rate0, dt)
+        for fix in fixs:        
+            fix.rgbw = np.array([1, 0, 0, 0]) * (1 + math.sin(self.phase0)) / 2
+
 class StrobeAnim:
     def __init__(self):
         rgbw = random_rgbw()
@@ -119,12 +132,14 @@ class PulseAnim:
 
 
 
+
+
 animations = [
-    SineAnim,
-    StrobeAnim,
-    SequenceAnim,
+    #SineAnim,
+    RedSineAnim,
+    #StrobeAnim,
+    #SequenceAnim,
     #PulseAnim,
-    #RedSine,
 ]
 
 def change_anim():
@@ -163,10 +178,15 @@ while True:
     lastT = t
     #print(t)
 
-    if is_night():
-        print("night time")
-        # TODO: set everything to black
-        #continue
+    # If not night time, turn everything off
+    """
+    if not is_night():
+        print("day time")
+        for fix in fixs:
+            fix.dimming = 0
+        led_strip.dimming = 0
+        continue
+    """
 
     if t - last_change > change_delay:
         change_anim()
@@ -177,10 +197,7 @@ while True:
     # Sleep 10ms
     time.sleep(0.01)
 
-    # TODO:
     # Animate led_strip with slow sine, never quite goes to zero
-    led_strip.ch0 = 1
-
-
-
-    
+    v = (math.sin(t * math.pi / 2) +1) / 2
+    led_strip.ch0 = 0.1 + (v * 0.55)
+    led_strip.dimming = 1
