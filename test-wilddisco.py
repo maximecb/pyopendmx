@@ -165,6 +165,22 @@ parser.add_argument('--day-mode', action='store_true')
 parser.add_argument('--switch-time', type=float, default=40)
 args = parser.parse_args()
 
+# Show a test pattern on startup
+fix0.rgbw = np.array([1, 0, 0, 0])
+time.sleep(1)
+fix1.rgbw = np.array([0, 1, 0, 0])
+time.sleep(1)
+fix2.rgbw = np.array([0, 0, 1, 0])
+time.sleep(1)
+fix3.rgbw = np.array([0, 0, 0, 1])
+time.sleep(1)
+led_strip.ch0 = 1
+led_strip.ch1 = 1
+led_strip.ch2 = 1
+led_strip.ch3 = 1
+led_strip.dimming = 0.6
+time.sleep(10)
+
 def change_anim():
     """
     Select a new random animation
