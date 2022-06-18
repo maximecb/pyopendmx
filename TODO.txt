@@ -1,23 +1,37 @@
-TODO: measure power usage of whole system with battery
-- plug the system in the daytime with all components, check power usage
-
-TODO: setup long purple strips for road?
-
-TODO: configure script to run on startup
-sudo nano /home/pi/.bashrc
-
 TODO: first animation should be a test pattern
 - predictable sequence
 - everything white
 
-TODO: PulseAnim
+----------------------------------------------------------------------
 
 
 
 
 
 
+[DONE] TODO: have an animation that's just fullbright? fadeon
 
+[DONE] TODO: check that code correctly runs on startup
+
+[DONE] TODO: measure power usage of whole system with battery
+- plug the system in the daytime with all components, check power usage
+=> idle power level is on the order of 3-5w, 24 hours of autonomy
+=> max power seems to be about 30w with the whole setup
+
+[DONE] TODO: setup long purple strips for road
+
+[DONE] TODO: PulseAnim
+
+[DONE] TODO: configure script to run on startup
+sudo nano /home/pi/.bashrc
+
+[DONE] TODO: make sure that night mode setup is uncommented
+
+[DONE] TODO: make sure that animation switch time is a proper 40s
+- add option for quick mode
+
+[DONE] TODO: can we fade out everything before the animation switch?
+- if 2s before switch, dim everything out, continue
 
 [DONE] TODO: animation with everything on a single red sine
 

@@ -6,6 +6,7 @@
 import time
 import math
 import random
+import argparse
 from dmx import *
 from utils import *
 
@@ -103,7 +104,7 @@ class StrobeAnim:
         
     def update(self, t, dt):
         dt = t - self.start_time
-        dimming = max(1 - (dt / 12), 0)
+        dimming = max(1 - (dt / 30), 0)
         fix0.dimming = dimming
         fix1.dimming = dimming
         fix2.dimming = dimming
@@ -128,19 +129,41 @@ class SequenceAnim:
             self.switch()
 
 class PulseAnim:
-    pass
+    def __init__(self):
+        self.switch_delay = random.uniform(0.8, 2.5)
+        self.switch_time = 0
+       
+    def switch(self):
+        self.switch_time = time.time()
+        for fix in fixs:
+            fix.dimming = 0
+        next_idx = random.randrange(0, len(fixs))
+        fixs[next_idx].dimming = 1
+        fixs[next_idx].rgbw = random_rgbw()
+        
+    def update(self, t, dt):
+        if t - self.switch_time > self.switch_delay:
+            self.switch()
+        for fix in fixs:
+            fix.dimming *= 0.96
 
+class BrightAnim:
+    def __init__(self):
+        self.dimming = 0
 
+    def update(self, t, dt):
+        # Slowly fade on
+        self.dimming = min(1, self.dimming + 1/800)
+        for fix in fixs:        
+            fix.dimming = self.dimming
+            fix.rgbw = np.array([1, 1, 1, 1])
 
+#############################################################################
 
-
-animations = [
-    #SineAnim,
-    RedSineAnim,
-    #StrobeAnim,
-    #SequenceAnim,
-    #PulseAnim,
-]
+parser = argparse.ArgumentParser()
+parser.add_argument('--day-mode', action='store_true')
+parser.add_argument('--switch-time', type=float, default=40)
+args = parser.parse_args()
 
 def change_anim():
     """
@@ -166,38 +189,56 @@ def change_anim():
     
     return cur_anim
 
-lastT = time.time()
+animations = [
+    SineAnim,
+    RedSineAnim,
+    StrobeAnim,
+    SequenceAnim,
+    PulseAnim,
+    BrightAnim
+]
+
+change_delay = args.switch_time
+fadeout_delay = 3
+last_t = time.time()
 last_change = 0
-change_delay = 10
 cur_anim = None
 change_anim()
 
 while True:
+    # Sleep 10ms
+    time.sleep(0.01)
+
     t = time.time()
-    dt = t - lastT
-    lastT = t
+    dt = t - last_t
+    last_t = t
     #print(t)
 
     # If not night time, turn everything off
-    """
-    if not is_night():
+    if not is_night() and not args.day_mode:
         print("day time")
         for fix in fixs:
             fix.dimming = 0
         led_strip.dimming = 0
         continue
-    """
 
-    if t - last_change > change_delay:
-        change_anim()
+    # Animate led_strip with slow sine, never quite goes to zero
+    v = (math.sin(t * math.pi / 2) +1) / 2
+    led_strip.ch0 = 1
+    led_strip.ch1 = 1
+    led_strip.ch2 = 1
+    led_strip.ch3 = 1
+    led_strip.dimming = 0.05 + (v * 0.35)
+
+    # If it's time to fade out the current animation
+    if t - last_change > change_delay - fadeout_delay:
+        for fix in fixs:
+            fix.dimming = max(fix.dimming - 0.004, 0)
+        print(fix0.dimming)
+        if t - last_change > change_delay:
+            change_anim()
+        continue
 
     # Update the current animation
     cur_anim.update(t, dt)
 
-    # Sleep 10ms
-    time.sleep(0.01)
-
-    # Animate led_strip with slow sine, never quite goes to zero
-    v = (math.sin(t * math.pi / 2) +1) / 2
-    led_strip.ch0 = 0.1 + (v * 0.55)
-    led_strip.dimming = 1
