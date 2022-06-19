@@ -179,7 +179,7 @@ led_strip.ch1 = 1
 led_strip.ch2 = 1
 led_strip.ch3 = 1
 led_strip.dimming = 0.6
-time.sleep(10)
+time.sleep(4)
 
 def change_anim():
     """
@@ -221,6 +221,8 @@ last_change = 0
 cur_anim = None
 change_anim()
 
+start_time = time.time()
+
 while True:
     # Sleep 10ms
     time.sleep(0.01)
@@ -230,21 +232,17 @@ while True:
     last_t = t
     #print(t)
 
-    # If not night time, turn everything off
-    if not is_night() and not args.day_mode:
-        print("day time")
-        for fix in fixs:
-            fix.dimming = 0
-        led_strip.dimming = 0
-        continue
+    # Shut off after 7.5 hours
+    if (t - start_time) > 7.5 * (60 * 60):
+        break
 
     # Animate led_strip with slow sine, never quite goes to zero
-    v = (math.sin(t * math.pi / 2) +1) / 2
+    v = (math.sin(t * math.pi / 4) +1) / 2
     led_strip.ch0 = 1
     led_strip.ch1 = 1
     led_strip.ch2 = 1
     led_strip.ch3 = 1
-    led_strip.dimming = 0.05 + (v * 0.35)
+    led_strip.dimming = 0.02 + (v * 0.30)
 
     # If it's time to fade out the current animation
     if t - last_change > change_delay - fadeout_delay:
@@ -258,3 +256,7 @@ while True:
     # Update the current animation
     cur_anim.update(t, dt)
 
+for fix in fixs:
+    fix.dimming = 0
+led_strip.dimming = 0
+time.sleep(10)

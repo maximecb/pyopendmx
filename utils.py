@@ -5,12 +5,12 @@ def is_night():
     now = datetime.datetime.now()
     #print(now)
 
-    # Before 4:45AM
-    if now.hour <= 4 or (now.hour == 4 and now.minute <= 45):
+    # Before 4:30AM
+    if now.hour <= 4 or (now.hour == 4 and now.minute <= 30):
         return True
 
-    # After 9:00PM
-    if (now.hour >= 21 and now.minute >= 0) or (now.hour >= 22):
+    # After 9:05PM
+    if (now.hour >= 21 and now.minute >= 5) or (now.hour >= 22):
         return True
 
     return False
