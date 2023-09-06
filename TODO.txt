@@ -36,16 +36,19 @@ IDEA: light train code, can also do symmetries
 -----------------------------------------------------------------------------
 
 TODO: implement gobo moving head fixture, 9ch mode
+MiniGobo9CH
 
-TODO: implement RGB36 fixture
 
-TODO: try again connecting to raspberry pi with vscode
+
+
+[DONE] TODO: move random color code into dmx.py or utils.py
+
+[DONE] TODO: test RGB36 fixtures
+
+[DONE] TODO: implement RGB36 fixture
+
+[DONE] TODO: try again connecting to raspberry pi with vscode
 - local editing is more tedious
-
-
-
-
-
 
 -----------------------------------------------------------------------------
 

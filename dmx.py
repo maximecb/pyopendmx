@@ -1,8 +1,35 @@
 import time
-import math
+import random
 import threading
 from pyftdi.ftdi import Ftdi
 import numpy as np
+
+def random_rgb():
+    while True:
+        color = np.array([
+            random.choice([1, 0]),
+            random.choice([1, 0]),
+            random.choice([1, 0]),
+        ])
+
+        if color.any():
+            break
+
+    return color
+
+def random_rgbw():
+    while True:
+        color = np.array([
+            random.choice([1, 0]),
+            random.choice([1, 0]),
+            random.choice([1, 0]),
+            random.choice([1, 0]),
+        ])
+
+        if color.any():
+            break
+
+    return color
 
 def map_to(val, min, max):
     assert max > min
@@ -164,6 +191,30 @@ class RGBW12(DMXDevice):
         dmx.set_float(self.chan_no, 3, 0)
         dmx.set_float(self.chan_no, 4, 0)
         dmx.set_float(self.chan_no, 5, self.rgbw)
+
+class RGB36(DMXDevice):
+    """
+    RGB fixture with 36 LEDs, 6 channels
+    CH1: total dimming
+    CH2: R 0-255
+    CH3: G 0-255
+    CH4: B 0-255
+    CH5: strobe speed (0-255)
+    CH6: color change speed (0-255)
+    """
+
+    def __init__(self, name, chan_no):
+        super().__init__(name, chan_no, num_chans=8)
+        self.dimming = 1
+        self.rgb = np.array([0, 0, 0])
+        self.strobe = 0
+        self.anim_speed = 0
+
+    def update(self, dmx):
+        dmx.set_float(self.chan_no, 1, self.dimming)
+        dmx.set_float(self.chan_no, 2, self.rgb)
+        dmx.set_float(self.chan_no, 5, self.strobe, 0, 255)
+        dmx.set_float(self.chan_no, 6, self.anim_speed, 0, 255)
 
 class MovingHead(DMXDevice):
     """

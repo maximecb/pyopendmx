@@ -9,33 +9,6 @@ import numpy as np
 import sounddevice as sd
 from dmx import *
 
-def random_rgb():
-    while True:
-        color = np.array([
-            random.choice([1, 0]),
-            random.choice([1, 0]),
-            random.choice([1, 0]),
-        ])
-
-        if color.any():
-            break
-
-    return color
-
-def random_rgbw():
-    while True:
-        color = np.array([
-            random.choice([1, 0]),
-            random.choice([1, 0]),
-            random.choice([1, 0]),
-            random.choice([1, 0]),
-        ])
-
-        if color.any():
-            break
-
-    return color
-
 class Animation:
     """
     Store animation state and update the animation
@@ -125,7 +98,7 @@ class Animation:
 
             fix1.rgbw = self.fix_seq[beat_no % 4, 0]
             fix2.rgbw = self.fix_seq[beat_no % 4, 1]
-            
+
             head.rgbw = rgbw
 
             strip.ch1 = 1
