@@ -33,14 +33,26 @@ IDEA: have a few LFOS to vary brightness
 
 IDEA: light train code, can also do symmetries
 
+-----------------------------------------------------------------------------
 
+TODO: implement gobo moving head fixture, 9ch mode
+
+TODO: implement RGB36 fixture
+
+TODO: try again connecting to raspberry pi with vscode
+- local editing is more tedious
+
+
+
+
+
+
+-----------------------------------------------------------------------------
 
 [DONE] TODO: need to have a 4-beat pattern we repeat 4x for the fixtures
 - can write a method to generate this pattern
 
 [DONE] TODO: try to get the LED strip working
-
------------------------------------------------------------------------------
 
 [DONE] TODO: try flashing with just fixtures, moving heads, or both
 
