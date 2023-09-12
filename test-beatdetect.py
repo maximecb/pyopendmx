@@ -15,21 +15,20 @@ class Animation:
     """
 
     def __init__(self, dmx):
-        self.fix1 = RGBW12(name="fix1", chan_no=1)
-        self.fix2 = RGBW12(name="fix2", chan_no=10)
-        self.head1 = MovingHead(name="head1", chan_no=20)
-        self.strip = LedStrip4CH(name="strip", chan_no=256)
+        self.fix1 = RGB36(name="fix1", chan_no=100)
+        self.fix2 = RGB36(name="fix2", chan_no=110)
+        self.fix3 = RGB36(name="fix3", chan_no=120)
+        self.fix4 = RGB36(name="fix4", chan_no=130)
+        self.fixs = [self.fix1, self.fix2, self.fix3, self.fix4]
 
-        dmx.add_device(self.fix1)
-        dmx.add_device(self.fix2)
-        dmx.add_device(self.head1)
-        dmx.add_device(self.strip)
+        self.head1 = MiniGobo9CH(name="head1", chan_no=32)
+        self.head2 = MiniGobo9CH(name="head2", chan_no=64)
+        self.heads = [self.head1, self.head2]
 
-        self.head1.dimming = 0.40
-        self.head1.speed = 0.25
-
-        self.head1.pan = 0.33
-        self.head1.tilt = 0
+        for fix in self.fixs:
+            dmx.add_device(fix)
+        for head in self.heads:
+            dmx.add_device(head)
 
     def gen_sequence(self, num_steps, num_elems):
         """
@@ -62,16 +61,14 @@ class Animation:
 
         max_loudness = max(loud_vals)
 
-        fix1 = self.fix1
-        fix2 = self.fix2
-        head = self.head1
-        strip = self.strip
+        #head = self.head1
 
         #fix1.strobe = 1
         #fix2.strobe = 1
         #head.strobe = 0.95
 
         if beat:
+            """
             # Every 4 bars
             if beat_no % 16 == 0:
                 self.fix_seq = self.gen_sequence(num_steps=4, num_elems=2)
@@ -80,35 +77,41 @@ class Animation:
             if beat_no % 2 == 0:
                 head.pan = random.uniform(0.15, 0.50)
                 head.tilt = random.uniform(0.00, 0.40)
-
-            rgbw = random_rgbw()
-
-            """
-            fix1_on, fix2_on = random.choice([
-                [1, 0],
-                [0, 1],
-                [1, 1]
-            ])
-
-            if fix1_on:
-                fix1.rgbw = rgbw
-            if fix2_on:
-                fix2.rgbw = rgbw
             """
 
-            fix1.rgbw = self.fix_seq[beat_no % 4, 0]
-            fix2.rgbw = self.fix_seq[beat_no % 4, 1]
+            rgb = random_rgb()
 
-            head.rgbw = rgbw
+            #fix1.rgbw = self.fix_seq[beat_no % 4, 0]
+            #fix2.rgbw = self.fix_seq[beat_no % 4, 1]
+            #head.rgbw = rgbw
 
-            strip.ch1 = 1
+            fixs = random.choices(self.fixs, k = random.randint(1, 4))
+            for fix in fixs:
+                fix.rgb = rgb
+
+            for head in self.heads:
+                head.dimming = 1
+                head.speed = 0.01
+                if beat_no % 4 == 0:
+                    head.color = random.randint(0, 7)
+                    head.gobo = random.randint(0, 7)
+
+                if beat_no % 4 == 0:
+                    head.pan = random.uniform(0.5, 0.9)
+                    head.tilt = random.uniform(0.7, 1.0)
+
+
 
         else:
             # Decay
-            fix1.rgbw = fix1.rgbw * 0.7
-            fix2.rgbw = fix2.rgbw * 0.7
-            head.rgbw = head.rgbw * 0.95
-            strip.ch1 = strip.ch1 * 0.8
+            for fix in self.fixs:
+                fix.rgb = fix.rgb * 0.86
+
+
+
+            #fix2.rgbw = fix2.rgbw * 0.7
+            #head.rgbw = head.rgbw * 0.95
+            #strip.ch1 = strip.ch1 * 0.8
             pass
 
 #############################################################################

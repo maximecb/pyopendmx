@@ -259,6 +259,66 @@ class MovingHead(DMXDevice):
         dmx.set_float(self.chan_no, 5, self.strobe)
         dmx.set_float(self.chan_no, 6, self.rgbw)
 
+class MiniGobo9CH(DMXDevice):
+    """
+    Mini gobo moving head with color wheel.
+
+    CH1: motor pan
+    CH2: motor tilt
+    CH3: color wheel control, 0-127 for fixed color selection
+    CH4: gobo wheel control, 0-63 for fixed gobo selection
+
+    CH5: light control, 0 is off, 15 is on.
+    CH6: dimming
+    CH7: pan/tilt speed 0-255 (fast to slow)
+    CH8: function control
+    CH9: effects
+
+    Pan:
+    0.00 is pointing back
+    0.15 is pointing left
+    0.33 is pointing forward
+    0.50 is pointing right
+
+    Tilt:
+    0.00 is pointing forward
+    0.50 is fully up
+    1.00 is pointing back
+    """
+
+    def __init__(self, name, chan_no):
+        super().__init__(name, chan_no, num_chans=9)
+        self.pan = 0
+        self.tilt = 0
+        self.speed = 0.5
+        self.dimming = 0
+        self.gobo = 0
+        self.color =  0
+
+    def update(self, dmx):
+        dmx.set_float(self.chan_no, 1, self.pan)
+        dmx.set_float(self.chan_no, 2, self.tilt)
+
+        # Color wheel
+        # There are 8 colors, with indices in [0, 7]
+        dmx[self.chan_no + 3 - 1] = self.color * 16
+
+        # Gobo wheel
+        # There are 8 gobos, with indices in [0, 7]
+        dmx[self.chan_no + 4 - 1] = self.gobo * 8
+
+        # Color control (on/off)
+        dmx[self.chan_no + 5 - 1] = 15
+
+        # Dimming/brightness
+        dmx.set_float(self.chan_no, 6, self.dimming)
+
+        # Rotation speed
+        dmx.set_float(self.chan_no, 7, 1 - self.speed)
+
+        # Function control
+        dmx.set_float(self.chan_no, 8, 0)
+
 class LedStrip4CH(DMXDevice):
     """
     4-channel DMX LED strip decoder

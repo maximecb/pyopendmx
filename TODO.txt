@@ -38,6 +38,9 @@ IDEA: light train code, can also do symmetries
 TODO: implement gobo moving head fixture, 9ch mode
 MiniGobo9CH
 
+Pick random pan in [0.5, 0.8]
+Pick random tilt in [0.5, 1.0]
+
 
 
 
