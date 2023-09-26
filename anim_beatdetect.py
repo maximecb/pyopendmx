@@ -8,13 +8,14 @@ import aubio
 import numpy as np
 import sounddevice as sd
 from dmx import *
+from gamepad import *
 
 class Animation:
     """
     Store animation state and update the animation
     """
 
-    def __init__(self, dmx):
+    def __init__(self, dmx, pad):
         self.fix1 = RGB36(name="fix1", chan_no=100)
         self.fix2 = RGB36(name="fix2", chan_no=110)
         self.fix3 = RGB36(name="fix3", chan_no=120)
@@ -29,6 +30,8 @@ class Animation:
             dmx.add_device(fix)
         for head in self.heads:
             dmx.add_device(head)
+
+        self.pad = pad
 
     def gen_sequence(self, num_steps, num_elems):
         """
@@ -54,36 +57,13 @@ class Animation:
 
         return seq
 
-    def update(self, beat, beat_no, loudness, loud_vals):
+    def update(self, beat, beat_no):
         """
         Update the animation
         """
 
-        max_loudness = max(loud_vals)
-
-        #head = self.head1
-
-        #fix1.strobe = 1
-        #fix2.strobe = 1
-        #head.strobe = 0.95
-
         if beat:
-            """
-            # Every 4 bars
-            if beat_no % 16 == 0:
-                self.fix_seq = self.gen_sequence(num_steps=4, num_elems=2)
-
-            # Every 2 beats
-            if beat_no % 2 == 0:
-                head.pan = random.uniform(0.15, 0.50)
-                head.tilt = random.uniform(0.00, 0.40)
-            """
-
             rgb = random_rgb()
-
-            #fix1.rgbw = self.fix_seq[beat_no % 4, 0]
-            #fix2.rgbw = self.fix_seq[beat_no % 4, 1]
-            #head.rgbw = rgbw
 
             fixs = random.choices(self.fixs, k = random.randint(1, 4))
             for fix in fixs:
@@ -100,8 +80,6 @@ class Animation:
                     head.pan = random.uniform(0.5, 0.9)
                     head.tilt = random.uniform(0.7, 1.0)
 
-
-
         else:
             # Decay
             for fix in self.fixs:
@@ -109,22 +87,20 @@ class Animation:
 
 
 
-            #fix2.rgbw = fix2.rgbw * 0.7
-            #head.rgbw = head.rgbw * 0.95
-            #strip.ch1 = strip.ch1 * 0.8
-            pass
+
+
 
 #############################################################################
 
 dmx = DMXUniverse()
-
-anim = Animation(dmx)
+pad = GamePad()
+anim = Animation(dmx, pad)
 
 dmx.start_dmx_thread()
 
 samplerate = 44100
-win_s = 1024                # fft size
-hop_s = win_s // 2          # hop size
+win_s = 1024        # fft size
+hop_s = win_s // 2  # hop size
 
 a_tempo = aubio.tempo("default", win_s, hop_s, samplerate)
 
@@ -156,7 +132,7 @@ while True:
         # Note: we can call o.get_last_s() to get the sample where the beat occurred
         beat = a_tempo(samples)
 
-    anim.update(beat, beat_no, loudness, loud_vals)
+    anim.update(beat, beat_no)
 
     if beat:
         print('|' * 40)
