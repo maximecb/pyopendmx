@@ -32,6 +32,7 @@ class Animation:
             dmx.add_device(head)
 
         self.pad = pad
+        self.mode = 'normal'
 
     def gen_sequence(self, num_steps, num_elems):
         """
@@ -62,12 +63,46 @@ class Animation:
         Update the animation
         """
 
+        if self.pad.event_avail():
+            type, number, value = self.pad.read_event()
+            #print('type={}, value={}, number={}'.format(type, value, number))
+            #time.sleep(0.2)
+
+            if type == 'button' and value == 1:
+                if number == 0: # Green
+                    pass
+                if number == 1: # Red
+                    pass
+                if number == 5: # Right shoulder
+                    self.mode = 'strobe'
+                    self.start_beat = beat_no
+
+        if self.mode == 'strobe':
+            for head in self.heads:
+                head.dimming = 0
+
+            for fix in self.fixs:
+                fix.dimming = 1
+                fix.strobe = 0.2
+                fix.rgb = np.array([1, 1, 1])
+
+            if beat and beat_no == self.start_beat + 16:
+                self.mode = 'normal'
+
+            return
+
+
+
+        # Note: strobe while flashing looks kind of cool too
+        # Could trigger every N beats (or at random)
+
         if beat:
             rgb = random_rgb()
 
             fixs = random.choices(self.fixs, k = random.randint(1, 4))
             for fix in fixs:
                 fix.rgb = rgb
+                fix.strobe = 0
 
             for head in self.heads:
                 head.dimming = 1
