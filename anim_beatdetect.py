@@ -16,16 +16,20 @@ class Animation:
     """
 
     def __init__(self, dmx, pad):
+        # Blacklight fixture
+        self.uv = RGBW54(name="uv", chan_no=10)
+
+        self.head1 = MiniGobo9CH(name="head1", chan_no=32)
+        self.head2 = MiniGobo9CH(name="head2", chan_no=64)
+        self.heads = [self.head1, self.head2]
+
         self.fix1 = RGB36(name="fix1", chan_no=100)
         self.fix2 = RGB36(name="fix2", chan_no=110)
         self.fix3 = RGB36(name="fix3", chan_no=120)
         self.fix4 = RGB36(name="fix4", chan_no=130)
         self.fixs = [self.fix1, self.fix2, self.fix3, self.fix4]
 
-        self.head1 = MiniGobo9CH(name="head1", chan_no=32)
-        self.head2 = MiniGobo9CH(name="head2", chan_no=64)
-        self.heads = [self.head1, self.head2]
-
+        dmx.add_device(self.uv)
         for fix in self.fixs:
             dmx.add_device(fix)
         for head in self.heads:
@@ -68,28 +72,35 @@ class Animation:
             #print('type={}, value={}, number={}'.format(type, value, number))
             #time.sleep(0.2)
 
-            if type == 'button' and value == 1:
+            if type == 'button':
                 if number == 0: # Green
                     pass
                 if number == 1: # Red
                     pass
-                if number == 5: # Right shoulder
+
+                if number == 2: # Blue
+                    if value == 1:
+                        self.uv.rgbw = np.array([1, 1, 1, 1])
+                    else:
+                        self.uv.rgbw = np.array([0, 0, 0, 0])
+
+                if number == 5 and value == 1: # Right shoulder
                     self.mode = 'strobe'
                     self.start_beat = beat_no
 
+        # Strobe mode
         if self.mode == 'strobe':
-            for head in self.heads:
-                head.dimming = 0
-
-            for fix in self.fixs:
-                fix.dimming = 1
-                fix.strobe = 0.2
-                fix.rgb = np.array([1, 1, 1])
-
             if beat and beat_no == self.start_beat + 16:
                 self.mode = 'normal'
+            else:
+                for head in self.heads:
+                    head.dimming = 0
 
-            return
+                for fix in self.fixs:
+                    fix.dimming = 1
+                    fix.strobe = 0.2
+                    fix.rgb = np.array([1, 1, 1])
+                return
 
 
 
@@ -119,8 +130,6 @@ class Animation:
             # Decay
             for fix in self.fixs:
                 fix.rgb = fix.rgb * 0.86
-
-
 
 
 

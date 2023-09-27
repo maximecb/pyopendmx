@@ -9,15 +9,15 @@ from dmx import *
 
 dmx = DMXUniverse()
 
-spot = RGBWSpotLight(name="spot", chan_no=128)
+uv = RGBW54(name="uv", chan_no=10)
 
-dmx.add_device(spot)
+dmx.add_device(uv)
 
 dmx.start_dmx_thread()
 
 while True:
-    spot.rgbw = np.array([1, 1, 1, 1])
+    uv.rgbw = np.array([1, 1, 1, 1])
     time.sleep(1.0)
 
-    spot.rgbw = np.array([0, 0, 0, 0])
+    uv.rgbw = np.array([0, 0, 0, 0])
     time.sleep(1.0)

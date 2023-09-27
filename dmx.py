@@ -216,6 +216,24 @@ class RGB36(DMXDevice):
         dmx.set_float(self.chan_no, 5, self.strobe, 0, 255)
         dmx.set_float(self.chan_no, 6, self.anim_speed, 0, 255)
 
+class RGBW54(DMXDevice):
+    """
+    RGBW fixture with 54 LEDs, in 4 channel mode
+    CH1: R 0-255
+    CH2: G 0-255
+    CH3: B 0-255
+    CH4: W 0-255
+    """
+
+    def __init__(self, name, chan_no):
+        super().__init__(name, chan_no, num_chans=4)
+        self.dimming = 1
+        self.rgbw = np.array([0, 0, 0, 0])
+
+    def update(self, dmx):
+        rgbw = self.rgbw * self.dimming
+        dmx.set_float(self.chan_no, 1, rgbw)
+
 class MovingHead(DMXDevice):
     """
     Moving head with RGBW and strobe.
