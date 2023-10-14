@@ -71,6 +71,9 @@ class DMXUniverse:
         assert (val >= 0 and val <= 255)
         self.data[idx] = val
 
+    def set_int(self, start_chan, chan_no, int_val):
+        self[start_chan + chan_no - 1] = int_val
+
     def set_float(self, start_chan, chan_no, val, min=0, max=255):
         assert (chan_no >= 1)
 
@@ -378,3 +381,32 @@ class Relay3CH(DMXDevice):
         dmx[self.chan_no + 0] = 255 if self.ch1 else 0
         dmx[self.chan_no + 1] = 255 if self.ch2 else 0
         dmx[self.chan_no + 2] = 255 if self.ch3 else 0
+
+class R1200L(DMXDevice):
+    """
+    Rockville R1200L smoke machine
+    CH1: fog burst control
+    CH2: red
+    CH3: green
+    CH4: blue
+    CH5: strobe speed
+    CH6: dimming
+    CH7: sound response
+    """
+
+    def __init__(self, name, chan_no):
+        super().__init__(name, chan_no, num_chans=7)
+        self.fog = 0
+        self.dimming = 1
+        self.rgb = np.array([0, 0, 0])
+        self.strobe = 0
+
+    def update(self, dmx):
+        dmx.set_float(self.chan_no, 1, self.fog)
+        dmx.set_float(self.chan_no, 2, self.rgb * self.dimming)
+        dmx.set_float(self.chan_no, 5, self.strobe)
+        # Dimming/function/sound control
+        # The manual seems inaccurate, this has to be set to 0
+        dmx.set_int(self.chan_no, 6, 0)
+        # Sound response
+        dmx.set_int(self.chan_no, 7, 0)
