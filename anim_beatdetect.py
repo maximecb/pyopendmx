@@ -16,9 +16,6 @@ class Animation:
     """
 
     def __init__(self, dmx, pad):
-        # Blacklight fixture
-        self.uv = RGBW54(name="uv", chan_no=10)
-
         self.head1 = MiniGobo9CH(name="head1", chan_no=32)
         self.head2 = MiniGobo9CH(name="head2", chan_no=64)
         self.heads = [self.head1, self.head2]
@@ -29,11 +26,17 @@ class Animation:
         self.fix4 = RGB36(name="fix4", chan_no=130)
         self.fixs = [self.fix1, self.fix2, self.fix3, self.fix4]
 
-        dmx.add_device(self.uv)
-        for fix in self.fixs:
-            dmx.add_device(fix)
+        # Blacklight fixture
+        self.uv = RGBW54(name="uv", chan_no=10)
+
+        self.strip = LedStrip4CH(name="strip", chan_no=256)
+
         for head in self.heads:
             dmx.add_device(head)
+        for fix in self.fixs:
+            dmx.add_device(fix)
+        dmx.add_device(self.uv)
+        dmx.add_device(self.strip)
 
         self.pad = pad
         self.mode = 'normal'
@@ -102,11 +105,6 @@ class Animation:
                     fix.rgb = np.array([1, 1, 1])
                 return
 
-
-
-        # Note: strobe while flashing looks kind of cool too
-        # Could trigger every N beats (or at random)
-
         if beat:
             rgb = random_rgb()
 
@@ -126,11 +124,14 @@ class Animation:
                     head.pan = random.uniform(0.5, 0.9)
                     head.tilt = random.uniform(0.7, 1.0)
 
+            self.strip.ch1 = 0.7
+
         else:
             # Decay
             for fix in self.fixs:
                 fix.rgb = fix.rgb * 0.86
 
+            self.strip.ch1 = self.strip.ch1 * 0.83
 
 
 
