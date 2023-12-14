@@ -70,6 +70,8 @@ class Animation:
         Update the animation
         """
 
+        t = time.time()
+
         if self.pad.event_avail():
             type, number, value = self.pad.read_event()
             #print('type={}, value={}, number={}'.format(type, value, number))
@@ -79,16 +81,17 @@ class Animation:
                 if number == 0: # Green
                     pass
                 if number == 1: # Red
-                    pass
+                    self.mode = 'red'
 
-                if number == 2: # Blue
-                    if value == 1:
-                        self.uv.rgbw = np.array([1, 1, 1, 1])
+                if number == 2 and value == 1: # Blue
+                    self.uv.rgbw = np.array([1, 1, 1, 1])
+                    if self.uv.dimming:
+                        self.uv.dimming = 0
                     else:
-                        self.uv.rgbw = np.array([0, 0, 0, 0])
+                        self.uv.dimming = 1
 
-                if number == 2: # Yellow
-                    pass
+                if number == 3: # Yellow
+                    self.mode = 'normal'
 
                 # Strobe until released
                 if number == 5 and value == 1: # Right shoulder
@@ -101,16 +104,19 @@ class Animation:
         if self.mode == 'strobe':
             for head in self.heads:
                 head.dimming = 0
+            self.strip.ch1 = 0
 
             for fix in self.fixs:
-                fix.dimming = 1
-                fix.strobe = 0.2
                 fix.rgb = np.array([1, 1, 1])
+                fix.strobe = 0.2
 
             return
 
         if beat:
             rgb = random_rgb()
+
+            if self.mode == 'red':
+                rgb = np.array([1, 0, 0])
 
             fixs = random.choices(self.fixs, k = random.randint(1, 4))
             for fix in fixs:
@@ -124,6 +130,9 @@ class Animation:
                     head.color = random.randint(0, 7)
                     head.gobo = random.randint(0, 7)
 
+                    if self.mode == 'red':
+                        head.color = 1
+
                 if beat_no % 4 == 0:
                     head.pan = random.uniform(0.5, 0.9)
                     head.tilt = random.uniform(0.7, 1.0)
@@ -136,6 +145,8 @@ class Animation:
                 fix.rgb = fix.rgb * 0.86
 
             self.strip.ch1 = self.strip.ch1 * 0.83
+
+
 
 
 
