@@ -28,12 +28,16 @@ class Animation:
         self.head2 = MiniGobo9CH(name="head2", chan_no=64)
         self.heads = [self.head1, self.head2]
 
+        # Blacklight fixture
+        self.uv = RGBW54(name="uv", chan_no=10)
+
         self.strip = LedStrip4CH(name="strip", chan_no=256)
 
         for fix in self.fixs:
             dmx.add_device(fix)
         for head in self.heads:
             dmx.add_device(head)
+        dmx.add_device(self.uv)
         dmx.add_device(self.strip)
 
         self.dmx = dmx
@@ -53,6 +57,7 @@ class Animation:
         # Set initial color to red
         for fix in self.fixs:
             fix.rgb = np.array([1, 0, 0])
+        self.uv.rgbw = np.array([1, 1, 1, 1])
         self.strip.ch1 = 0.8
 
     def update(self):

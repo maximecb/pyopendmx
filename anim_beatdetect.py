@@ -87,23 +87,27 @@ class Animation:
                     else:
                         self.uv.rgbw = np.array([0, 0, 0, 0])
 
+                if number == 2: # Yellow
+                    pass
+
+                # Strobe until released
                 if number == 5 and value == 1: # Right shoulder
                     self.mode = 'strobe'
                     self.start_beat = beat_no
+                if number == 5 and value == 0:
+                    self.mode = 'normal'
 
         # Strobe mode
         if self.mode == 'strobe':
-            if beat and beat_no == self.start_beat + 16:
-                self.mode = 'normal'
-            else:
-                for head in self.heads:
-                    head.dimming = 0
+            for head in self.heads:
+                head.dimming = 0
 
-                for fix in self.fixs:
-                    fix.dimming = 1
-                    fix.strobe = 0.2
-                    fix.rgb = np.array([1, 1, 1])
-                return
+            for fix in self.fixs:
+                fix.dimming = 1
+                fix.strobe = 0.2
+                fix.rgb = np.array([1, 1, 1])
+
+            return
 
         if beat:
             rgb = random_rgb()
