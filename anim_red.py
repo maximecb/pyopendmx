@@ -6,8 +6,11 @@ import random
 import threading
 import aubio
 import numpy as np
+from collections import namedtuple
 import sounddevice as sd
 from dmx import *
+
+Sine = namedtuple("sine", ("rate", "phase", "mid", "ampl"))
 
 class Animation:
     """
@@ -25,15 +28,32 @@ class Animation:
         self.head2 = MiniGobo9CH(name="head2", chan_no=64)
         self.heads = [self.head1, self.head2]
 
+        self.strip = LedStrip4CH(name="strip", chan_no=256)
+
         for fix in self.fixs:
             dmx.add_device(fix)
         for head in self.heads:
             dmx.add_device(head)
+        dmx.add_device(self.strip)
 
         self.dmx = dmx
 
         self.next_update = [0] * len(dmx.devices)
-        self.target_rgb = [np.array([0, 0, 0])] * len(dmx.devices)
+
+        self.sines = []
+        for i in range(len(dmx.devices)):
+            sine = Sine(
+                rate = random.uniform(0.05, 0.15),
+                phase = random.uniform(0, math.pi),
+                mid = 0.5,
+                ampl = 0.48
+            )
+            self.sines.append(sine)
+
+        # Set initial color to red
+        for fix in self.fixs:
+            fix.rgb = np.array([1, 0, 0])
+        self.strip.ch1 = 0.8
 
     def update(self):
         """
@@ -47,8 +67,6 @@ class Animation:
             if t < self.next_update[idx]:
                 continue
 
-            print('updating', idx)
-
             if isinstance(dev, MiniGobo9CH):
                 dev.dimming = 1
                 dev.speed = 1 / 255
@@ -57,22 +75,18 @@ class Animation:
                 dev.pan = random.uniform(0.5, 0.9)
                 dev.tilt = random.uniform(0.7, 1.0)
 
-            else:
-                # Random red target value
-                self.target_rgb[idx] = random.uniform(0.05, 1.0) * np.array([1, 0, 0])
-
             self.next_update[idx] = t + random.uniform(3, 6)
 
         for (idx, dev) in enumerate(self.dmx.devices):
-            if not isinstance(dev, RGB36):
-                continue
+            # Compute the sine value
+            s = self.sines[idx]
+            val = s.mid + math.sin(s.phase + s.rate * 2 * math.pi * t) * s.ampl
 
-            rgb_delta = self.target_rgb[idx] - dev.rgb
+            print(val)
 
-            dev.rgb = dev.rgb + rgb_delta * 0.5 * (1.0 / 30.0)
+            dev.dimming = val
 
-            if idx == 0:
-                print(dev.rgb)
+
 
 
 
