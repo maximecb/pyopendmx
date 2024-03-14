@@ -31,19 +31,14 @@ TODO: trigger strobing when intensity above normal
 
 IDEA: have a few LFOS to vary brightness
 
-IDEA: light train code, can also do symmetries
+TODO: left and right motion animations
+TODO: flash of white light (left shoulder?)
 
 -----------------------------------------------------------------------------
 
-TODO: implement gobo moving head fixture, 9ch mode
-MiniGobo9CH
 
-Pick random pan in [0.5, 0.8]
-Pick random tilt in [0.5, 1.0]
 
-TODO: left and right motion animations
 
-TODO: flash of white light (left shoulder?)
 
 
 
