@@ -79,7 +79,8 @@ class Animation:
 
             if type == 'button':
                 if number == 0: # Green
-                    pass
+                    self.mode = 'purple'
+
                 if number == 1: # Red
                     self.mode = 'red'
 
@@ -93,8 +94,9 @@ class Animation:
                 if number == 3: # Yellow
                     self.mode = 'normal'
 
+                # Right shoulder:
                 # Strobe until released
-                if number == 5 and value == 1: # Right shoulder
+                if number == 5 and value == 1:
                     self.mode = 'strobe'
                     self.start_beat = beat_no
                 if number == 5 and value == 0:
@@ -103,7 +105,19 @@ class Animation:
         # Strobe mode
         if self.mode == 'strobe':
             for head in self.heads:
-                head.dimming = 0
+                head.speed = 1
+                head.dimming = 1
+                head.gobo = 2
+                head.color = 0
+                head.strobe = 1
+
+            self.heads[0].pan = 0.30
+            self.heads[0].tilt = 0.00
+
+            self.heads[1].pan = 0.37
+            self.heads[1].tilt = 0.00
+
+            self.uv.dimming = 0
             self.strip.ch1 = 0
 
             for fix in self.fixs:
@@ -117,6 +131,8 @@ class Animation:
 
             if self.mode == 'red':
                 rgb = np.array([1, 0, 0])
+            if self.mode == 'purple':
+                rgb = np.array([1, 0, 1])
 
             fixs = random.choices(self.fixs, k = random.randint(1, 4))
             for fix in fixs:
@@ -126,12 +142,15 @@ class Animation:
             for head in self.heads:
                 head.dimming = 1
                 head.speed = 0.01
+                head.strobe = 0
                 if beat_no % 4 == 0:
                     head.color = random.randint(0, 7)
                     head.gobo = random.randint(0, 7)
 
                     if self.mode == 'red':
                         head.color = 1
+                    if self.mode == 'purple':
+                        head.color = 7
 
                 if beat_no % 4 == 0:
                     head.pan = random.uniform(0.5, 0.9)

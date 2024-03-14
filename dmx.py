@@ -314,7 +314,8 @@ class MiniGobo9CH(DMXDevice):
         self.speed = 0.5
         self.dimming = 0
         self.gobo = 0
-        self.color =  0
+        self.color = 0
+        self.strobe = 0
 
     def update(self, dmx):
         dmx.set_float(self.chan_no, 1, self.pan)
@@ -329,7 +330,10 @@ class MiniGobo9CH(DMXDevice):
         dmx[self.chan_no + 4 - 1] = self.gobo * 8
 
         # Color control (on/off)
-        dmx[self.chan_no + 5 - 1] = 15
+        if self.strobe == 0:
+            dmx[self.chan_no + 5 - 1] = 15
+        else:
+            dmx[self.chan_no + 5 - 1] = 92
 
         # Dimming/brightness
         dmx.set_float(self.chan_no, 6, self.dimming)
