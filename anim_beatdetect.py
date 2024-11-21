@@ -195,6 +195,9 @@ while True:
     samples, overflowed = stream.read(hop_s)
     samples = samples.squeeze()
 
+    # Amplify the volume a bit
+    samples = samples * 5
+
     loudness = np.std(samples)
     loud_vals.append(loudness)
 

@@ -42,8 +42,6 @@ TODO: flash of white light (left shoulder?)
 
 
 
-
-
 [DONE] TODO: strobe mode
 
 [DONE] TODO: move random color code into dmx.py or utils.py
