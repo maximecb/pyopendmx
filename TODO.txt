@@ -40,7 +40,9 @@ TODO: flash of white light (left shoulder?)
 
 
 
-
+[DONE] TODO: implement UDP BeatServer
+echo "Hello UDP" | nc -u 192.168.1.211 7777
+nc -ul -p 192.168.1.211 7777
 
 [DONE] TODO: strobe mode
 

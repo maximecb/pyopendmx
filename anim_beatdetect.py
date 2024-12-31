@@ -9,6 +9,7 @@ import numpy as np
 import sounddevice as sd
 from dmx import *
 from gamepad import *
+from beatserver import *
 
 class Animation:
     """
@@ -173,6 +174,7 @@ class Animation:
 
 dmx = DMXUniverse()
 pad = GamePad()
+beatserver = BeatServer()
 anim = Animation(dmx, pad)
 
 dmx.start_dmx_thread()
@@ -218,8 +220,8 @@ while True:
 
     if beat:
         print('|' * 40)
+        beatserver.beat()
         beat_no += 1
-    else:
-        print()
 
 stream.end()
+server.stop()
